@@ -57,6 +57,8 @@ bool Player::Update(float dt)
 		position.y += 0.2 * dt;
 	}
 		
+
+
 	app->render->DrawTexture(texture,position.x,position.y);
 
 	return true;
