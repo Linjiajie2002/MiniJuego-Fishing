@@ -63,7 +63,7 @@ bool Player::Update(float dt)
 
 	
 
-	app->render->DrawTexture(texture, position.x, position.y);
+	app->render->DrawTexture(texture, position.x-15, position.y-15);
 
 	return true;
 }
