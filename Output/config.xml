@@ -51,6 +51,13 @@
 			<background_dialog texturepath="Assets/Textures/background_textbox.png"/>
 		</textures>
 	</dialogmanager>
+
+
+	<fishingmanager>
+
+	</fishingmanager>
+	
+	
 	
 	<Animations>
 		<player>
@@ -62,8 +69,16 @@
 			<walk_D start="2" end="4" speed="0.2f" loop="true"/>
 			<walk_L start="10" end="12" speed="0.2f" loop="true"/>
 			<walk_R start="14" end="16" speed="0.2f" loop="true"/>
-			
 		</player>
+
+		<fishing>
+			<trash1 start="4" end="5" speed="0.2f" loop="true"/>
+			<trash2 start="4" end="5" speed="0.2f" loop="true"/>
+			<trash1 start="4" end="5" speed="0.2f" loop="true"/>
+			<trash1 start="4" end="5" speed="0.2f" loop="true"/>
+		</fishing>
+		
+		
 	</Animations>
 
 	</config>

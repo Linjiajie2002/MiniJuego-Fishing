@@ -31,7 +31,31 @@ public:
 	bool CleanUp();
 
 
+private:
+	void castingline(FISHINGTYPE type);
+
+
 public:
+	Animation trash;
+	Animation small;
+	Animation medium;
+	Animation big;
+	Animation fishingfloat;
+
+	Animation SPosition;
+	SDL_Rect* spritePositions;
+
+	Direction player_Direction;
+	Animation* currentAnimation = nullptr;
+	SDL_Rect rect;
+	int TSprite;
+	int SpriteX;
+	int SpriteY;
+	int PhotoWeight;
+	const char* Path;
+	SDL_Texture* texture = NULL;
+
+	Fishing fishing;
 	
 };
 

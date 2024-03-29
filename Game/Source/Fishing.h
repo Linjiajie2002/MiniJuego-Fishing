@@ -35,6 +35,10 @@ public:
 	Rodlevel rodlevel;
 	FISHINGTYPE fishingtype;
 
+	bool rodReady = false;
+	bool isFishing = false;
+
+
 
 };
 

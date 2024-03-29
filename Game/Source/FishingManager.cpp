@@ -27,9 +27,6 @@ bool FishingManager::Awake(pugi::xml_node config)
 	LOG("Loading Fishing Manager");
 	bool ret = true;
 
-	//background_tex_path = config.child("textures").child("background_dialog").attribute("texturepath").as_string();
-
-
 	return ret;
 
 }
@@ -48,6 +45,15 @@ bool FishingManager::CleanUp()
 
 
 	return ret;
+}
+
+void FishingManager::castingline(FISHINGTYPE type)
+{
+	if (fishing.rodReady) {
+		if (fishing.isFishing) {
+
+		}
+	}
 }
 
 
