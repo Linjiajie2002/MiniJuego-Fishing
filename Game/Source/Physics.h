@@ -28,6 +28,7 @@ enum class ColliderType {
 	ITEM,
 	PLATFORM, 
 	LAGO,
+	DIALOG_TRIGGER,
 	UNKNOWN
 	// ..
 };
@@ -84,6 +85,7 @@ public:
 	
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
+	void EndContact(b2Contact* contact); /*NEW*/
 
 private:
 

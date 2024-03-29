@@ -25,6 +25,15 @@
     <ClCompile Include="Source\Pathfinding.cpp" />
     <ClCompile Include="Source\GuiControlButton.cpp" />
     <ClCompile Include="Source\GuiManager.cpp" />
+    <ClCompile Include="Source\DialogManager.cpp">
+      <Filter>DialogoSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DialogTriggerEntity.cpp">
+      <Filter>DialogoSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FishingManager.cpp">
+      <Filter>FishingSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -78,6 +87,21 @@
     <ClInclude Include="Source\GuiControlButton.h" />
     <ClInclude Include="Source\GuiManager.h" />
     <ClInclude Include="Source\Animation.h" />
+    <ClInclude Include="Source\Dialog.h">
+      <Filter>DialogoSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DialogManager.h">
+      <Filter>DialogoSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DialogTriggerEntity.h">
+      <Filter>DialogoSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Fishing.h">
+      <Filter>FishingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FishingManager.h">
+      <Filter>FishingSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -88,6 +112,12 @@
     </Filter>
     <Filter Include="External\PugiXml">
       <UniqueIdentifier>{2855ff7f-53a1-413d-a75b-18b4ade921dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DialogoSystem">
+      <UniqueIdentifier>{b30aa5ed-8489-47b3-a2ad-1c7f9edddaa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FishingSystem">
+      <UniqueIdentifier>{d608252d-76f1-4f9d-b888-d82316298893}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

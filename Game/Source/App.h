@@ -24,6 +24,9 @@ class Map;
 class Physics;
 class GuiManager;
 
+class DialogManager;
+class FishingManager;
+
 class App
 {
 public:
@@ -106,6 +109,8 @@ public:
 	//L07 DONE 2: Add Physics module
 	Physics* physics;
 	GuiManager* guiManager;
+	DialogManager* dialogManager;
+	FishingManager* fishingManager;
 
 private:
 

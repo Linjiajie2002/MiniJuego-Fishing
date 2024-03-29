@@ -8,6 +8,7 @@
 #include "Physics.h"
 #include "Render.h"
 #include "Animation.h"
+#include "DialogTriggerEntity.h"
 struct SDL_Texture;
 
 class Player : public Entity
@@ -66,7 +67,8 @@ public:
 	SDL_Texture* texture = NULL;
 
 
-
+	bool contactDialogTrigger = false;
+	DialogTrigger* dialogTriggerContact = nullptr;
 };
 
 #endif // __PLAYER_H__
