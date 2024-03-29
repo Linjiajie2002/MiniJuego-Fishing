@@ -4,7 +4,9 @@
 #include "Entity.h"
 #include "Point.h"
 #include "SDL/include/SDL.h"
-
+#include "vector"
+#include "Physics.h"
+#include "Render.h"
 struct SDL_Texture;
 
 class Player : public Entity
@@ -36,7 +38,8 @@ public:
 
 	//Audio fx
 	int pickCoinFxId;
-
+	PhysBody* pbody;
+	b2Vec2 vel;
 };
 
 #endif // __PLAYER_H__

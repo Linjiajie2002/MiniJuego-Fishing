@@ -36,7 +36,7 @@ bool Physics::Start()
 	LOG("Creating Physics 2D environment");
 
 	// Create a new World
-	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
+	world = new b2World(b2Vec2(0, 0));
 
 	// Set this module as a listener for contacts
 	world->SetContactListener(this);
@@ -225,10 +225,10 @@ bool Physics::PostUpdate()
 
 	// Activate or deactivate debug mode
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		debug = !debug;
+		app->debug = !app->debug;
 	
 	//  Iterate all objects in the world and draw the bodies
-	if (debug)
+	if (app->debug)
 	{
 		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 		{

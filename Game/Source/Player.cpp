@@ -33,33 +33,37 @@ bool Player::Start() {
 	//initialize audio effect
 	pickCoinFxId = app->audio->LoadFx(config.attribute("coinfxpath").as_string());
 
-
+	pbody = app->physics->CreateCircle(position.x, position.y, 20, bodyType::DYNAMIC);
+	pbody->listener = this;
+	pbody->ctype = ColliderType::PLAYER;
 	return true;
 }
 
 bool Player::Update(float dt)
 {
-	//L03: DONE 4: render the player texture and modify the position of the player using WSAD keys and render the texture
-
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		position.x += -0.2*dt;
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		position.x += 0.2*dt;
-	}
-
+	b2Vec2 velocity = b2Vec2(0, 0);
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		position.y += -0.2 * dt;
+		velocity.y += -0.2 * dt;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		position.y += 0.2 * dt;
+		velocity.y += 0.2 * dt;
 	}
-		
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		velocity.x = -0.2 * dt;
+	}
 
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		velocity.x = 0.2 * dt;
+	}
+	pbody->body->SetLinearVelocity(velocity);
+	b2Transform pbodyPos = pbody->body->GetTransform();
+	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2;
+	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2;
 
-	app->render->DrawTexture(texture,position.x,position.y);
+	
+
+	app->render->DrawTexture(texture, position.x, position.y);
 
 	return true;
 }

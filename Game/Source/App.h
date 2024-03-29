@@ -93,7 +93,7 @@ private:
 public:
 
 	// L03: DONE 1: Add the EntityManager Module to App
-
+	bool debug = false;
 	// Modules
 	Window* win;
 	Input* input;
