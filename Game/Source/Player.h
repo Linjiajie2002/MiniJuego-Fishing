@@ -7,6 +7,7 @@
 #include "vector"
 #include "Physics.h"
 #include "Render.h"
+#include "Animation.h"
 struct SDL_Texture;
 
 class Player : public Entity
@@ -32,7 +33,7 @@ public:
 
 	//L02: DONE 2: Declare player parameters
 	float speed = 0.2f;
-	SDL_Texture* texture = NULL;
+	
 	pugi::xml_node config;
 	uint texW, texH;
 
@@ -40,6 +41,31 @@ public:
 	int pickCoinFxId;
 	PhysBody* pbody;
 	b2Vec2 vel;
+
+
+
+	Animation idle_U;
+	Animation idle_D;
+	Animation idle_L;
+	Animation idle_R;
+	Animation walk_U;
+	Animation walk_D;
+	Animation walk_L;
+	Animation walk_R;
+	Animation SPosition;
+	SDL_Rect* spritePositions;
+
+	Animation* currentAnimation = nullptr;
+	SDL_Rect rect;
+	int TSprite;
+	int SpriteX;
+	int SpriteY;
+	int PhotoWeight;
+	const char* Path;
+	SDL_Texture* texture = NULL;
+
+
+
 };
 
 #endif // __PLAYER_H__

@@ -23,48 +23,76 @@ bool Player::Awake() {
 	//L03: DONE 2: Initialize Player parameters
 	position = iPoint(config.attribute("x").as_int(), config.attribute("y").as_int());
 
+	Path = config.attribute("texturepath").as_string();
+	TSprite = config.attribute("Tsprite").as_int();
+	SpriteX = config.attribute("ani_x").as_int();
+	SpriteY = config.attribute("ani_y").as_int();
+	PhotoWeight = config.attribute("Pweight").as_int();
+	spritePositions = SPosition.SpritesPos(TSprite, SpriteX, SpriteY, PhotoWeight);
+
+	idle_D.LoadAnim("player", "idle_D", spritePositions);
+	idle_U.LoadAnim("player", "idle_U", spritePositions);
+	idle_L.LoadAnim("player", "idle_L", spritePositions);
+	idle_R.LoadAnim("player", "idle_R", spritePositions);
+	walk_D.LoadAnim("player", "walk_D", spritePositions);
+	walk_U.LoadAnim("player", "walk_U", spritePositions);
+	walk_L.LoadAnim("player", "walk_L", spritePositions);
+	walk_R.LoadAnim("player", "walk_R", spritePositions);
+
+
 	return true;
 }
 
 bool Player::Start() {
 
-	texture = app->tex->Load(config.attribute("texturePath").as_string());
+	texture = app->tex->Load(Path);
 
-	//initialize audio effect
-	pickCoinFxId = app->audio->LoadFx(config.attribute("coinfxpath").as_string());
-
-	pbody = app->physics->CreateCircle(position.x, position.y, 20, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x, position.y, 30, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
+	currentAnimation = &idle_D;
+	printf("Path:%s\nTSprite:%d\nSpriteX:%d\nSpriteY:%d\nPhotoWeight:%d\n", Path,TSprite,SpriteX,SpriteY,PhotoWeight);
+
+
 	return true;
 }
 
 bool Player::Update(float dt)
 {
+
+	currentAnimation = &idle_D;
+
+
 	b2Vec2 velocity = b2Vec2(0, 0);
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		velocity.y += -0.2 * dt;
+		currentAnimation = &walk_U;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		velocity.y += 0.2 * dt;
+		currentAnimation = &walk_D;
 	}
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
+		currentAnimation = &walk_L;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
+		currentAnimation = &walk_R;
 	}
 	pbody->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2;
 	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2;
 
+
+	rect = currentAnimation->GetCurrentFrame();
+	currentAnimation->Update();
+	app->render->DrawTexture(texture, position.x -70, position.y -70, 3, SDL_FLIP_NONE, &rect);
 	
-
-	app->render->DrawTexture(texture, position.x-15, position.y-15);
-
+	
 	return true;
 }
 
