@@ -55,6 +55,7 @@ public:
 	Animation SPosition;
 	SDL_Rect* spritePositions;
 
+	Direction player_Direction;
 	Animation* currentAnimation = nullptr;
 	SDL_Rect rect;
 	int TSprite;

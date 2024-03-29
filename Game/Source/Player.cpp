@@ -51,6 +51,7 @@ bool Player::Start() {
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 	currentAnimation = &idle_D;
+	player_Direction = Direction::UNKNOWN;
 	printf("Path:%s\nTSprite:%d\nSpriteX:%d\nSpriteY:%d\nPhotoWeight:%d\n", Path,TSprite,SpriteX,SpriteY,PhotoWeight);
 
 
@@ -60,27 +61,39 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 
-	currentAnimation = &idle_D;
+	if (player_Direction == Direction::UP) { currentAnimation = &idle_U; }
+	else if (player_Direction == Direction::DOWN) { currentAnimation = &idle_D; }
+	else if (player_Direction == Direction::LEFT) { currentAnimation = &idle_L; }
+	else if (player_Direction == Direction::RIGHT) { currentAnimation = &idle_R; }
+	else {
+		currentAnimation = &idle_D;
+	}
+	
 
 
 	b2Vec2 velocity = b2Vec2(0, 0);
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		velocity.y += -0.2 * dt;
 		currentAnimation = &walk_U;
+		player_Direction = Direction::UP;
+		
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		velocity.y += 0.2 * dt;
 		currentAnimation = &walk_D;
+		player_Direction = Direction::DOWN;
 	}
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		currentAnimation = &walk_L;
+		player_Direction = Direction::LEFT;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
 		currentAnimation = &walk_R;
+		player_Direction = Direction::RIGHT;
 	}
 	pbody->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = pbody->body->GetTransform();

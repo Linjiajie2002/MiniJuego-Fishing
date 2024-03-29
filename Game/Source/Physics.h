@@ -32,6 +32,14 @@ enum class ColliderType {
 	// ..
 };
 
+enum class Direction {
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN,
+	UNKNOWN
+};
+
 // Small class to return to other modules to track position and rotation of physics bodies
 class PhysBody
 {
