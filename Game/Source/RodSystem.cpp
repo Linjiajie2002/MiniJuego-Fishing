@@ -16,7 +16,19 @@
 #include "App.h"
 #include "Fishing.h"
 #include "FishingManager.h"
+#include <map>
+#include <random>
 
+std::map<Fishlevel, double> prizes = {
+	{Fishlevel::NOTHING, 0.4},
+	{Fishlevel::TRASH, 0.3},
+	{Fishlevel::SMALL, 0.15},
+	{Fishlevel::MEDIUM, 0.1},
+	{Fishlevel::BIG, 0.05}
+	/*{"small", 0.3},
+	{"medium", 0.15},
+	{"big", 0.05} */
+};
 
 RodSystem::RodSystem() : Entity(EntityType::ROD)
 {
@@ -74,10 +86,29 @@ bool RodSystem::Update(float dt)
 	}
 
 
+
+
 	if (fishing.startFishing) {
-		
-	
+		//printf("\n%f", timeFishing.ReadMSec());
+		//printf("%d", lotteryrandomNum);
+		if (timeFishing.ReadMSec() >= lotteryrandomNum * 1000) {
+
+		}
+		/*if (timeFishing.ReadMSec() >= lotteryrandomNum*1000) {
+			fishing.startFishing = false;
+			fishing.isFishing = false;
+			if (!fishing.isFishing) {
+				fishingfloat_getPlayerPosition = true;
+			}
+			castingline(fishingtype);
+		}*/
+
 	}
+
+
+
+
+
 
 
 	return true;
@@ -137,19 +168,19 @@ void RodSystem::ani_castingline(Direction direction)
 	fishingflota_position_y = fishingflota_position_y * (1 - timeLerp) + fishingflota_CenterY * timeLerp;
 
 
-	float cheke_x = (METERS_TO_PIXELS(floatbody->body->GetPosition().x) - texH / 2)-23;
-	float cheke_y = (METERS_TO_PIXELS(floatbody->body->GetPosition().y) - texH / 2)-23;
+	float cheke_x = (METERS_TO_PIXELS(floatbody->body->GetPosition().x) - texH / 2) - 23;
+	float cheke_y = (METERS_TO_PIXELS(floatbody->body->GetPosition().y) - texH / 2) - 23;
 
 
 	if (direction == Direction::UP) {
-		if (cheke_y>= fishingflota_position_y) {
+		if (cheke_y >= fishingflota_position_y) {
 			b2Vec2 force(0.0f, -10.0f);
 			floatbody->body->ApplyForceToCenter(force, true);
 		}
 		else {
 			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x-23, fishingflota_position_y, 3);
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
 	}
 	else if (direction == Direction::DOWN) {
 		if (cheke_y <= fishingflota_position_y) {
@@ -159,7 +190,7 @@ void RodSystem::ani_castingline(Direction direction)
 		else {
 			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x-23, fishingflota_position_y, 3);
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
 	}
 	else if (direction == Direction::LEFT) {
 		if (cheke_x >= fishingflota_position_x) {
@@ -169,17 +200,17 @@ void RodSystem::ani_castingline(Direction direction)
 		else {
 			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y-23, 3);
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
 	}
 	else if (direction == Direction::RIGHT) {
-		if (cheke_x  <= fishingflota_position_x) {
+		if (cheke_x <= fishingflota_position_x) {
 			b2Vec2 force(10.0f, 0.0f);
 			floatbody->body->ApplyForceToCenter(force, true);
 		}
 		else {
 			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y-23, 3);
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
 	}
 	else {
 		if (cheke_y <= fishingflota_position_y) {
@@ -189,10 +220,10 @@ void RodSystem::ani_castingline(Direction direction)
 		else {
 			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x-23, fishingflota_position_y, 3);
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
 	}
 
-	
+
 }
 
 void RodSystem::selectFishingtype()
@@ -208,6 +239,39 @@ void RodSystem::selectFishingtype()
 
 
 
+void RodSystem::choujiang()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<double> dis(0.0, 1.0);
+	double random_number = dis(gen);
+
+	// 根据概率分配抽奖
+	double cumulative_probability = 0.0;
+	Fishlevel selected_prize;
+	for (const auto& prize : prizes) {
+		cumulative_probability += prize.second;
+		if (random_number <= cumulative_probability) {
+			selected_prize = prize.first;
+			break;
+		}
+	}
+
+	switch (selected_prize)
+	{
+	case Fishlevel::NOTHING: printf("\nNothing"); break;
+	case Fishlevel::TRASH:  printf("\nTRASH"); break;
+	case Fishlevel::SMALL:  printf("\nSMALL"); break;
+	case Fishlevel::MEDIUM:  printf("\nMEDIUM"); break;
+	case Fishlevel::BIG:printf("\nBIG");break;
+	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN");break;
+	}
+}
+
+
+
+
+
 void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
@@ -215,6 +279,14 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::LAGO:
 		fishing.startFishing = true;
+		timeFishing.Start();
+		lotteryrandomNum = rand() % 3 + 2;
+		for (int i = 0; i < 10; i++)
+		{
+			choujiang();
+		}
+
+
 
 		break;
 	case ColliderType::UNKNOWN:

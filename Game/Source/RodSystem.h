@@ -35,6 +35,8 @@ public:
 	void ani_castingline(Direction direction);
 	void selectFishingtype();
 
+	void choujiang();
+
 public:
 
 	pugi::xml_node config;
@@ -69,6 +71,9 @@ public:
 	FISHINGTYPE fishingtype;
 	bool changefishingtype = false;
 
+	//StartFishing
+	Timer timeFishing;
+	int lotteryrandomNum;
 };
 #endif // __ITEM_H__#pragma once
 #pragma once

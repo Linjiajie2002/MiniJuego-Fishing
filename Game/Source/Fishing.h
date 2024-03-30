@@ -9,10 +9,12 @@
 
 enum class Fishlevel
 {
+	NOTHING,
 	TRASH,
 	SMALL,
 	MEDIUM,
-	BIG
+	BIG,
+	UNKNOWN
 };
 
 enum class Rodlevel
