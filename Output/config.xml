@@ -43,33 +43,37 @@
 			  <sentence text="Se me ha acabado el repertorio de chistes, vuelve en otro momento..."/>
 		  </repeat_sentences>
 	  </dialogTrigger>
+	  
+	  <rodsystem>
+		  <fishingfloat texturepath="Assets/Textures/fishingfloat.png" />
+	  </rodsystem>
 
   </scene>
 
-	<dialogmanager>
-		<textures>
-			<background_dialog texturepath="Assets/Textures/background_textbox.png"/>
-		</textures>
-	</dialogmanager>
+  <dialogmanager>
+	  <textures>
+		  <background_dialog texturepath="Assets/Textures/background_textbox.png"/>
+	  </textures>
+  </dialogmanager>
 
 
-	<fishingmanager>
-		<fishlevel>
-			<trashes>
-				<trash></trash>
-			</trashes>
-			<smalls>
-				<small></small>
-			</smalls>
-			<mediums>
-				<medium></medium>
-			</mediums>
-			<bigs>
-				<big></big>
-			</bigs>
-		</fishlevel>
-		<fishingfloat texturepath="Assets/Textures/fishingfloat.png" />
-	</fishingmanager>
+  <fishingmanager>
+	  <fishlevel>
+		  <trashes>
+			  <trash></trash>
+		  </trashes>
+		  <smalls>
+			  <small></small>
+		  </smalls>
+		  <mediums>
+			  <medium></medium>
+		  </mediums>
+		  <bigs>
+			  <big></big>
+		  </bigs>
+	  </fishlevel>
+
+  </fishingmanager>
 	
 	
 	

@@ -79,7 +79,7 @@ bool Player::Update(float dt)
 		player_Direction = Direction::UP;
 
 		
-		if (app->fishingManager->fishing.isFishing) { playermove = true; }
+		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; }
 		else { playermove = false; }
 	}
 
@@ -87,14 +87,14 @@ bool Player::Update(float dt)
 		velocity.y += 0.2 * dt;
 		currentAnimation = &walk_D;
 		player_Direction = Direction::DOWN;
-		if (app->fishingManager->fishing.isFishing) { playermove = true; }
+		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; }
 		else { playermove = false; }
 	}
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		currentAnimation = &walk_L;
 		player_Direction = Direction::LEFT;
-		if (app->fishingManager->fishing.isFishing) { playermove = true; }
+		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; }
 		else { playermove = false; }
 	}
 
@@ -102,7 +102,7 @@ bool Player::Update(float dt)
 		velocity.x = 0.2 * dt;
 		currentAnimation = &walk_R;
 		player_Direction = Direction::RIGHT;
-		if (app->fishingManager->fishing.isFishing) { playermove = true; }
+		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; }
 		else { playermove = false; }
 	}
 

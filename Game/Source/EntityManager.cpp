@@ -5,6 +5,7 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "DialogTriggerEntity.h"
+#include "RodSystem.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -92,6 +93,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::DIALOG_TRIGGER:
 		entity = new DialogTrigger();
+		break;
+	case EntityType::ROD:
+		entity = new RodSystem();
 		break;
 	default:
 		break;

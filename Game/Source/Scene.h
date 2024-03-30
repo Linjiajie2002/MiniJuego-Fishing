@@ -6,7 +6,7 @@
 #include "GuiControl.h"
 #include "GuiControlButton.h"
 #include "Player.h"
-#include "FishingManager.h"
+#include "RodSystem.h"
 
 struct SDL_Texture;
 
@@ -44,6 +44,7 @@ public:
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	Player* GetPlayer();
+	RodSystem* GetRod();
 
 private:
 	SDL_Texture* img;
@@ -61,6 +62,7 @@ private:
 
 public:
 	Player* player = new Player;
+	RodSystem* rodsystem = new RodSystem;
 };
 
 #endif // __SCENE_H__

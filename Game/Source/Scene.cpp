@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Item.h"
 #include "DialogTriggerEntity.h"
+#include "RodSystem.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -51,6 +52,12 @@ bool Scene::Awake(pugi::xml_node config)
 	{
 		DialogTrigger* dialogTrigger = (DialogTrigger*)app->entityManager->CreateEntity(EntityType::DIALOG_TRIGGER);
 		dialogTrigger->parameters = itemNode;
+	}
+
+	for (pugi::xml_node itemNode = config.child("rodsystem"); itemNode; itemNode = itemNode.next_sibling("rodsystem"))
+	{
+		rodsystem = (RodSystem*)app->entityManager->CreateEntity(EntityType::ROD);
+		rodsystem->parameters = itemNode;
 	}
 
 	return ret;
@@ -149,6 +156,11 @@ bool Scene::Update(float dt)
 Player* Scene::GetPlayer() {
 
 	return player;
+}
+
+RodSystem* Scene::GetRod()
+{
+	return rodsystem;
 }
 
 // Called each loop iteration
