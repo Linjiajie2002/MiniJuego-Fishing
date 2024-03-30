@@ -37,6 +37,7 @@ public:
 
 	bool rodReady = true;
 	bool isFishing = false;
+	bool startFishing = false;
 
 
 

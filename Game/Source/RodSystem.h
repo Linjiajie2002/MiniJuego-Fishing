@@ -30,7 +30,7 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
-private:
+public:
 	void castingline(FISHINGTYPE type);
 	void ani_castingline(Direction direction);
 	void selectFishingtype();
@@ -38,6 +38,7 @@ private:
 public:
 
 	pugi::xml_node config;
+	uint texW, texH;
 
 	Direction player_Direction;
 	//Animacion
@@ -63,7 +64,7 @@ public:
 	bool fishingfloat_getPlayerPosition = true;;
 	bool isFishingta = false;
 	bool crearfloatbody = false;
-	PhysBody* floatbody;
+	PhysBody* floatbody = nullptr;
 	//fishingType
 	FISHINGTYPE fishingtype;
 	bool changefishingtype = false;

@@ -54,7 +54,7 @@ bool Player::Start() {
 	pbody->ctype = ColliderType::PLAYER;
 	currentAnimation = &idle_D;
 	player_Direction = Direction::UNKNOWN;
-	printf("Path:%s\nTSprite:%d\nSpriteX:%d\nSpriteY:%d\nPhotoWeight:%d\n", Path, TSprite, SpriteX, SpriteY, PhotoWeight);
+	//printf("Path:%s\nTSprite:%d\nSpriteX:%d\nSpriteY:%d\nPhotoWeight:%d\n", Path, TSprite, SpriteX, SpriteY, PhotoWeight);
 
 
 	return true;
