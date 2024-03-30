@@ -92,17 +92,19 @@ bool RodSystem::Update(float dt)
 		//printf("\n%f", timeFishing.ReadMSec());
 		//printf("%d", lotteryrandomNum);
 		if (timeFishing.ReadMSec() >= lotteryrandomNum * 1000) {
-
-		}
-		/*if (timeFishing.ReadMSec() >= lotteryrandomNum*1000) {
-			fishing.startFishing = false;
-			fishing.isFishing = false;
-			if (!fishing.isFishing) {
-				fishingfloat_getPlayerPosition = true;
+			if (thistimehooked) {
+				hooked();
+				thistimehooked = false;
 			}
-			castingline(fishingtype);
-		}*/
-
+			if (timeFishing.ReadMSec() >= 5000) {
+				fishing.startFishing = false;
+				fishing.isFishing = false;
+				if (!fishing.isFishing) {
+					fishingfloat_getPlayerPosition = true;
+				}
+				castingline(fishingtype);
+			}
+		}
 	}
 
 
@@ -239,7 +241,7 @@ void RodSystem::selectFishingtype()
 
 
 
-void RodSystem::choujiang()
+void RodSystem::hooked()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -263,8 +265,8 @@ void RodSystem::choujiang()
 	case Fishlevel::TRASH:  printf("\nTRASH"); break;
 	case Fishlevel::SMALL:  printf("\nSMALL"); break;
 	case Fishlevel::MEDIUM:  printf("\nMEDIUM"); break;
-	case Fishlevel::BIG:printf("\nBIG");break;
-	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN");break;
+	case Fishlevel::BIG:printf("\nBIG"); break;
+	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
 	}
 }
 
@@ -281,13 +283,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 		fishing.startFishing = true;
 		timeFishing.Start();
 		lotteryrandomNum = rand() % 3 + 2;
-		for (int i = 0; i < 10; i++)
-		{
-			choujiang();
-		}
-
-
-
+		thistimehooked = true;
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

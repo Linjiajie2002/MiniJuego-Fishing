@@ -35,7 +35,7 @@ public:
 	void ani_castingline(Direction direction);
 	void selectFishingtype();
 
-	void choujiang();
+	void hooked();
 
 public:
 
@@ -74,6 +74,7 @@ public:
 	//StartFishing
 	Timer timeFishing;
 	int lotteryrandomNum;
+	bool thistimehooked = true;
 };
 #endif // __ITEM_H__#pragma once
 #pragma once
