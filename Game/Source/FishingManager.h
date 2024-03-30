@@ -9,6 +9,7 @@
 #include "List.h"
 #include <vector>
 #include "Player.h"
+#include "Physics.h"
 
 class FishingManager : public Module
 {
@@ -63,7 +64,8 @@ public:
 	bool fishingfloat_lineReady = false;
 	bool fishingfloat_getPlayerPosition = true;;
 	bool isFishingta = false;
-
+	bool crearfloatbody = false;
+	PhysBody* floatbody;
 	//fishingType
 	FISHINGTYPE fishingtype;
 	bool changefishingtype = false;

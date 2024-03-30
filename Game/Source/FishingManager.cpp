@@ -57,9 +57,14 @@ void FishingManager::castingline(FISHINGTYPE type)
 	if (fishing.rodReady) {
 		if (fishing.isFishing) {
 			fishingfloat_lineReady = true;
+			crearfloatbody = true;
 		}
 		else {
 			fishingfloat_lineReady = false;
+			if (floatbody != nullptr) {
+				floatbody->body->GetWorld()->DestroyBody(floatbody->body);
+				floatbody = nullptr;
+			}
 		}
 	}
 }
@@ -82,6 +87,15 @@ void FishingManager::ani_castingline(Direction direction)
 	float timeLerp = 0.1f;
 	fishingflota_position_x = fishingflota_position_x * (1 - timeLerp) + fishingflota_CenterX * timeLerp;
 	fishingflota_position_y = fishingflota_position_y * (1 - timeLerp) + fishingflota_CenterY * timeLerp;
+
+	if (floatbody == nullptr && crearfloatbody) {
+		floatbody = app->physics->CreateRectangleSensor(fishingflota_CenterX+25, fishingflota_CenterY+23, 20,20, bodyType::STATIC);
+		floatbody->ctype = ColliderType::FLOAT;
+		floatbody->body->SetFixedRotation(true);
+		crearfloatbody = false;
+	}
+
+
 	app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y, 3);
 }
 
@@ -106,6 +120,7 @@ bool FishingManager::Update(float dt) {
 		 isFishingta = fishing.isFishing;
 		
 		if (!fishing.isFishing) {
+			
 			fishingfloat_getPlayerPosition = true;
 		}
 		castingline(fishingtype);
