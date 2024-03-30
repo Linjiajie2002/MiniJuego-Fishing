@@ -66,6 +66,9 @@ public:
 	const char* Path;
 	SDL_Texture* texture = NULL;
 
+	//Fishing
+	bool playermove = false;
+
 
 	bool contactDialogTrigger = false;
 	DialogTrigger* dialogTriggerContact = nullptr;

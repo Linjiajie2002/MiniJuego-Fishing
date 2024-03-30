@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "List.h"
 #include <vector>
+#include "Player.h"
 
 class FishingManager : public Module
 {
@@ -33,19 +34,14 @@ public:
 
 private:
 	void castingline(FISHINGTYPE type);
+	void ani_castingline(Direction direction);
+	void selectFishingtype();
 
 
 public:
-	Animation trash;
-	Animation small;
-	Animation medium;
-	Animation big;
-	Animation fishingfloat;
-
-	Animation SPosition;
-	SDL_Rect* spritePositions;
 
 	Direction player_Direction;
+	//Animacion
 	Animation* currentAnimation = nullptr;
 	SDL_Rect rect;
 	int TSprite;
@@ -56,6 +52,23 @@ public:
 	SDL_Texture* texture = NULL;
 
 	Fishing fishing;
+
+	//fishingfloat
+	const char* fishingfloat_path;
+	SDL_Texture* fishingfloat_texture = NULL;
+	float fishingflota_position_x;
+	float fishingflota_position_y;
+	float fishingflota_CenterX;
+	float fishingflota_CenterY;
+	bool fishingfloat_lineReady = false;
+	bool fishingfloat_getPlayerPosition = true;;
+
+
+	//fishingType
+	FISHINGTYPE fishingtype;
+	bool changefishingtype = false;
+
+	Player player;
 	
 };
 

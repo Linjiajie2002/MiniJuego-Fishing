@@ -52,7 +52,7 @@ bool Player::Start() {
 	pbody->ctype = ColliderType::PLAYER;
 	currentAnimation = &idle_D;
 	player_Direction = Direction::UNKNOWN;
-	printf("Path:%s\nTSprite:%d\nSpriteX:%d\nSpriteY:%d\nPhotoWeight:%d\n", Path,TSprite,SpriteX,SpriteY,PhotoWeight);
+	printf("Path:%s\nTSprite:%d\nSpriteX:%d\nSpriteY:%d\nPhotoWeight:%d\n", Path, TSprite, SpriteX, SpriteY, PhotoWeight);
 
 
 	return true;
@@ -68,7 +68,7 @@ bool Player::Update(float dt)
 	else {
 		currentAnimation = &idle_D;
 	}
-	
+
 
 
 	b2Vec2 velocity = b2Vec2(0, 0);
@@ -76,25 +76,34 @@ bool Player::Update(float dt)
 		velocity.y += -0.2 * dt;
 		currentAnimation = &walk_U;
 		player_Direction = Direction::UP;
-		
+		if (app->scene->GetFishingManager()->fishing.isFishing) { playermove = true; }
+		else { playermove = false; }
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		velocity.y += 0.2 * dt;
 		currentAnimation = &walk_D;
 		player_Direction = Direction::DOWN;
+		if (app->scene->GetFishingManager()->fishing.isFishing) { playermove = true; }
+		else { playermove = false; }
 	}
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		currentAnimation = &walk_L;
 		player_Direction = Direction::LEFT;
+		if (app->scene->GetFishingManager()->fishing.isFishing) { playermove = true; }
+		else { playermove = false; }
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
 		currentAnimation = &walk_R;
 		player_Direction = Direction::RIGHT;
+		if (app->scene->GetFishingManager()->fishing.isFishing) { playermove = true; }
+		else { playermove = false; }
 	}
+
+
 	pbody->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2;
@@ -103,9 +112,9 @@ bool Player::Update(float dt)
 
 	rect = currentAnimation->GetCurrentFrame();
 	currentAnimation->Update();
-	app->render->DrawTexture(texture, position.x -70, position.y -70, 3, SDL_FLIP_NONE, &rect);
-	
-	
+	app->render->DrawTexture(texture, position.x - 70, position.y - 70, 3, SDL_FLIP_NONE, &rect);
+
+
 	return true;
 }
 

@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "GuiControl.h"
 #include "GuiControlButton.h"
+#include "Player.h"
+#include "FishingManager.h"
 
 struct SDL_Texture;
 
@@ -41,18 +43,26 @@ public:
 	// Handles multiple Gui Event methods
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
+	Player* GetPlayer();
+	FishingManager* GetFishingManager();
+
 private:
 	SDL_Texture* img;
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
 	SDL_Texture* mouseTileTex = nullptr;
+	
 
 	//L03: DONE 3b: Declare a Player attribute
-	Player* player;
+
 
 	// L15: TODO 2: Declare a GUI Control Button 
 	GuiControlButton* gcButtom;
+
+public:
+	Player* player = new Player;
+	FishingManager* fishingmanager = new FishingManager;
 };
 
 #endif // __SCENE_H__

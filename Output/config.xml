@@ -54,7 +54,21 @@
 
 
 	<fishingmanager>
-
+		<fishlevel>
+			<trashes>
+				<trash></trash>
+			</trashes>
+			<smalls>
+				<small></small>
+			</smalls>
+			<mediums>
+				<medium></medium>
+			</mediums>
+			<bigs>
+				<big></big>
+			</bigs>
+		</fishlevel>
+		<fishingfloat texturepath="Assets/Textures/fishingfloat.png" />
 	</fishingmanager>
 	
 	

@@ -141,9 +141,19 @@ bool Scene::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) app->SaveRequest();
 	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) app->LoadRequest();
 
+	
+
 	return true;
 }
 
+Player* Scene::GetPlayer() {
+
+	return player;
+}
+FishingManager* Scene::GetFishingManager()
+{
+	return fishingmanager;
+}
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
