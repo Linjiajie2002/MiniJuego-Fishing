@@ -62,13 +62,13 @@ public:
 	float fishingflota_CenterY;
 	bool fishingfloat_lineReady = false;
 	bool fishingfloat_getPlayerPosition = true;;
-
+	bool isFishingta = false;
 
 	//fishingType
 	FISHINGTYPE fishingtype;
 	bool changefishingtype = false;
+	
 
-	Player player;
 	
 };
 

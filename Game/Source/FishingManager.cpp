@@ -102,22 +102,27 @@ bool FishingManager::Update(float dt) {
 	bool ret = true;
 
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
-		/*fishingfloat_lineReady = !fishingfloat_lineReady;
-		if (!fishingfloat_lineReady) {
-			fishingfloat_getPlayerPosition = true;
-		}*/
-
-		fishing.isFishing = !fishing.isFishing;
+		 fishing.isFishing = !fishing.isFishing;
+		 isFishingta = fishing.isFishing;
+		
 		if (!fishing.isFishing) {
 			fishingfloat_getPlayerPosition = true;
 		}
 		castingline(fishingtype);
-
 	}
-
 	if (fishingfloat_lineReady) {
 
 		ani_castingline(app->scene->GetPlayer()->player_Direction);
+	}
+
+	
+
+	if (app->scene->GetPlayer()->playermove) {
+		fishing.isFishing = false;
+		if (!fishing.isFishing) {
+			fishingfloat_getPlayerPosition = true;
+		}
+		castingline(fishingtype);
 	}
 
 

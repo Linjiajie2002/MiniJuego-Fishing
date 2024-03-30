@@ -8,6 +8,8 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "Fishing.h"
+#include "FishingManager.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -69,14 +71,15 @@ bool Player::Update(float dt)
 		currentAnimation = &idle_D;
 	}
 
-
-
+	
 	b2Vec2 velocity = b2Vec2(0, 0);
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		velocity.y += -0.2 * dt;
 		currentAnimation = &walk_U;
 		player_Direction = Direction::UP;
-		if (app->scene->GetFishingManager()->fishing.isFishing) { playermove = true; }
+
+		
+		if (app->fishingManager->fishing.isFishing) { playermove = true; }
 		else { playermove = false; }
 	}
 
@@ -84,14 +87,14 @@ bool Player::Update(float dt)
 		velocity.y += 0.2 * dt;
 		currentAnimation = &walk_D;
 		player_Direction = Direction::DOWN;
-		if (app->scene->GetFishingManager()->fishing.isFishing) { playermove = true; }
+		if (app->fishingManager->fishing.isFishing) { playermove = true; }
 		else { playermove = false; }
 	}
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		currentAnimation = &walk_L;
 		player_Direction = Direction::LEFT;
-		if (app->scene->GetFishingManager()->fishing.isFishing) { playermove = true; }
+		if (app->fishingManager->fishing.isFishing) { playermove = true; }
 		else { playermove = false; }
 	}
 
@@ -99,7 +102,7 @@ bool Player::Update(float dt)
 		velocity.x = 0.2 * dt;
 		currentAnimation = &walk_R;
 		player_Direction = Direction::RIGHT;
-		if (app->scene->GetFishingManager()->fishing.isFishing) { playermove = true; }
+		if (app->fishingManager->fishing.isFishing) { playermove = true; }
 		else { playermove = false; }
 	}
 
@@ -113,7 +116,7 @@ bool Player::Update(float dt)
 	rect = currentAnimation->GetCurrentFrame();
 	currentAnimation->Update();
 	app->render->DrawTexture(texture, position.x - 70, position.y - 70, 3, SDL_FLIP_NONE, &rect);
-
+	
 
 	return true;
 }

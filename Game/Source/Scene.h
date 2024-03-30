@@ -44,7 +44,6 @@ public:
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	Player* GetPlayer();
-	FishingManager* GetFishingManager();
 
 private:
 	SDL_Texture* img;
@@ -62,7 +61,6 @@ private:
 
 public:
 	Player* player = new Player;
-	FishingManager* fishingmanager = new FishingManager;
 };
 
 #endif // __SCENE_H__

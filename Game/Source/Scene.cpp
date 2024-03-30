@@ -150,10 +150,7 @@ Player* Scene::GetPlayer() {
 
 	return player;
 }
-FishingManager* Scene::GetFishingManager()
-{
-	return fishingmanager;
-}
+
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
