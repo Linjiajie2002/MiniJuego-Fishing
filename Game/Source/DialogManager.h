@@ -31,7 +31,9 @@ public:
 
 	//Funcion para crear dialogos
 	Dialog* CreateDialog(pugi::xml_node itemNode, std::string name = "", const char* faceTexturePath = "", const char* font = "primary");
-	
+
+	void CreateDialogSinEntity(std::string Texto, std::string nombre);
+
 	//Funcion para añadir a la lista de dialogos
 	bool AddDialog(Dialog* dialog);
 	

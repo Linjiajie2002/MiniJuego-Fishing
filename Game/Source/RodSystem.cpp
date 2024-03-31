@@ -17,6 +17,8 @@
 #include "Fishing.h"
 #include "FishingManager.h"
 #include "DialogTriggerEntity.h"
+#include "DialogManager.h"
+#include "Dialog.h"
 #include <map>
 #include <random>
 
@@ -280,12 +282,13 @@ void RodSystem::hooked()
 
 void RodSystem::GamePlaye(Fishlevel fishleve)
 {
+
+
 	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(5);
 
 	printf("\n%d",(int)gamePlayTimeLimit_show);
 	if ((float)gamePlayTimeLimit_show == 0) {
 		printf("\nTimeStop, you get click %d veces", player_click_count);
-
 	}
 
 
@@ -304,6 +307,10 @@ void RodSystem::GamePlaye(Fishlevel fishleve)
 }
 
 void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
+
+
+	
+
 	switch (physB->ctype)
 	{
 	case ColliderType::PLAYER:
@@ -312,7 +319,8 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 		fishing.startFishing = true;
 		timeFishing.Start();
 		lotteryrandomNum = rand() % 3 + 2;
-		thistimehooked = true;		
+		thistimehooked = true;
+		app->dialogManager->CreateDialogSinEntity("hpolaaa","jiajie");
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

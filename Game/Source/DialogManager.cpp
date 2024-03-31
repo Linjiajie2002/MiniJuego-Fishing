@@ -103,6 +103,14 @@ Dialog* DialogManager::CreateDialog(pugi::xml_node itemNode, std::string name, c
 	return dialog;
 }
 
+void DialogManager::CreateDialogSinEntity(std::string Texto, std::string nombre)
+{
+	Dialog* dialogoPesca = new Dialog(Texto);
+	dialogoPesca->name = nombre;
+	dialogoPesca->font = app->render->primary_font;
+	app->dialogManager->AddDialog(dialogoPesca);
+}
+
 bool DialogManager::AddDialog(Dialog* dialog)
 {
 	dialogues.Add(dialog);
@@ -258,6 +266,10 @@ bool DialogManager::Update(float dt) {
 			indexText = 1;
 			dialogues.Del(dialogues.At(0));
 		}
+
+
+
+
 		//Gestion de las opciones
 		else if (dialogFinished && app->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN && optionSelected != 0 && actualDialog->type == DialogType::CHOOSE) {
 			if (optionSelected == 1) {
