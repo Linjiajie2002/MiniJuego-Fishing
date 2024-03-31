@@ -59,6 +59,11 @@ bool RodSystem::Start() {
 
 bool RodSystem::Update(float dt)
 {
+	
+	if (dialogoautoclose) {
+		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
+	}
+	//StartFishing
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		fishing.isFishing = !fishing.isFishing;
 		isFishingta = fishing.isFishing;
@@ -75,54 +80,59 @@ bool RodSystem::Update(float dt)
 	}
 
 
-
+	//if player mover, end fishing
 	if (app->scene->GetPlayer()->playermove) {
-		fishing.isFishing = false;
-		if (!fishing.isFishing) {
-			fishingfloat_getPlayerPosition = true;
+
+		fishingOver();
+
+		if (dialogoPlayerMoving) {
+			app->dialogManager->autoNextTime_TimerDown.Start();
+			dialogoTimeCount = 0;
+			dialogoautoclose = true;
+			dialogoPlayerMoving = false;
 		}
-		castingline(fishingtype);
 	}
 
 
-
-
+	//printf("\nstartFishing%d", fishing.startFishing);
+	//GamePlaye
 	if (fishing.startFishing) {
-		//printf("\n%f", timeFishing.ReadMSec());
-		//printf("%d", lotteryrandomNum);
 		if (timeFishing.ReadMSec() >= lotteryrandomNum * 1000) {
 			if (thistimehooked) {
-				hooked();
 				thistimehooked = false;
 				ishooked = true;
-				printf("hoook");
+				dialogoTimeCount = 0;
+				dialogoautoclose = true;
+				app->dialogManager->CreateDialogSinEntity("Ostia Puta ha pescado", "jiajie");
+				playerGoplay = true;
+				gamePlayTimeLimit.Start();
+				app->dialogManager->autoNextTime_TimerDown.Start();
+				//printf("hoook");
 			}
-
 			if (ishooked) {
-				timehookedLimit.Start();
 				ishooked = false;
 			}
+
+			//player count
 			if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
-				playerGoplay = true;
 				player_click_count += 1;
-				if (player_click_count == 1) {
-					gamePlayTimeLimit.Start();
-				}	
 			}
-			
 			if (playerGoplay == true) {
 				GamePlaye(selected_prize);
 			}
-			if (timehookedLimit.ReadMSec() >= 3000 && playerGoplay == false) {
-				fishing.startFishing = false;
-				fishing.isFishing = false;
-				if (!fishing.isFishing) {
-					fishingfloat_getPlayerPosition = true;
-				}
-				castingline(fishingtype);
+
+			//if player no play, end fishing
+			if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
+				player_click_count_TimeOver = 0;
+				playerGoplay_TimeOver = false;
+				dialogoTimeCount = 0;
+				dialogoautoclose = true;
+				app->dialogManager->CreateDialogSinEntity("joder, porque no pesca", "jiajie");
+				app->dialogManager->autoNextTime_TimerDown.Start();
+				fishingOver();
 			}
 
-				
+
 		}
 	}
 
@@ -252,7 +262,7 @@ void RodSystem::selectFishingtype()
 	}
 }
 
-void RodSystem::hooked()
+void RodSystem::hooked(int player_click_count)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -269,26 +279,42 @@ void RodSystem::hooked()
 		}
 	}
 
+
+
 	switch (selected_prize)
 	{
-	case Fishlevel::NOTHING: printf("\nNothing"); break;
-	case Fishlevel::TRASH:  printf("\nTRASH"); break;
-	case Fishlevel::SMALL:  printf("\nSMALL"); break;
-	case Fishlevel::MEDIUM:  printf("\nMEDIUM"); break;
-	case Fishlevel::BIG:printf("\nBIG"); break;
+	case Fishlevel::NOTHING: printf("\nYou get Nothing"); break;
+	case Fishlevel::TRASH:  printf("\nYou get TRASH"); break;
+	case Fishlevel::SMALL:  printf("\nYou get SMALL"); break;
+	case Fishlevel::MEDIUM:  printf("\nYou get MEDIUM"); break;
+	case Fishlevel::BIG:printf("\nYou get BIG"); break;
 	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
 	}
+
+	std::string strNumber = std::to_string(player_click_count);
+
+	dialogoTimeCount = 0;
+	dialogoautoclose = true;
+	app->dialogManager->CreateDialogSinEntity("you click" + strNumber, "jiajie");
+	app->dialogManager->autoNextTime_TimerDown.Start();
+	fishingOver();
+	printf("\ndddd");
 }
 
 void RodSystem::GamePlaye(Fishlevel fishleve)
 {
-
-
 	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(5);
 
-	printf("\n%d",(int)gamePlayTimeLimit_show);
+	printf("\n%d", (int)gamePlayTimeLimit_show);
 	if ((float)gamePlayTimeLimit_show == 0) {
 		printf("\nTimeStop, you get click %d veces", player_click_count);
+		playerGoplay = false;
+		playerGoplay_TimeOver = true;
+		player_click_count_TimeOver = player_click_count;
+		if (player_click_count_TimeOver != 0) {
+			hooked(player_click_count);
+		}
+		player_click_count = 0;
 	}
 
 
@@ -301,15 +327,27 @@ void RodSystem::GamePlaye(Fishlevel fishleve)
 	case Fishlevel::BIG:frequency_of_goals = 20; break;
 	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
 	}*/
-	
 
 
+
+}
+
+void RodSystem::fishingOver()
+{
+
+
+	fishing.isFishing = false;
+	if (!fishing.isFishing) {
+		fishingfloat_getPlayerPosition = true;
+	}
+
+	castingline(fishingtype);
 }
 
 void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 
-	
+
 
 	switch (physB->ctype)
 	{
@@ -317,10 +355,16 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::LAGO:
 		fishing.startFishing = true;
+		dialogoPlayerMoving = true;
 		timeFishing.Start();
 		lotteryrandomNum = rand() % 3 + 2;
 		thistimehooked = true;
-		app->dialogManager->CreateDialogSinEntity("hpolaaa","jiajie");
+
+		/*dialogoTimeCount = 0;
+		dialogoautoclose = true;*/
+		app->dialogManager->CreateDialogSinEntity("fishing", "jiajie");
+		app->dialogManager->autoNextTime_TimerDown.Start();
+
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

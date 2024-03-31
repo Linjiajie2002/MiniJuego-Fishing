@@ -34,8 +34,9 @@ public:
 	void castingline(FISHINGTYPE type);
 	void ani_castingline(Direction direction);
 	void selectFishingtype();
-	void hooked();
+	void hooked(int player_click_count);
 	void GamePlaye(Fishlevel fishleve);
+	void fishingOver();
 
 public:
 
@@ -73,11 +74,11 @@ public:
 
 	//StartFishing
 	Timer timeFishing;
-	Timer timehookedLimit;
 	int lotteryrandomNum;
 	bool thistimehooked = true;
 	bool ishooked = false;
 	bool playerGoplay = false;
+	bool playerGoplay_TimeOver = false;
 	Fishlevel selected_prize;
 
 	//GamePlay
@@ -85,7 +86,11 @@ public:
 	uint32 gamePlayTimeLimit_show = 0;
 	bool gamePlayStart;
 	int player_click_count;
-
+	int player_click_count_TimeOver;
+	bool dialogoautoclose = false;
+	bool dialogoPlayerMoving = false;
+	int dialogoTimeCount;
+	
 };
 #endif // __ITEM_H__#pragma once
 #pragma once

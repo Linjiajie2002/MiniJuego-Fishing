@@ -33,6 +33,7 @@ public:
 	Dialog* CreateDialog(pugi::xml_node itemNode, std::string name = "", const char* faceTexturePath = "", const char* font = "primary");
 
 	void CreateDialogSinEntity(std::string Texto, std::string nombre);
+	void AutoNextDiagolo(int autoNextTime);
 
 	//Funcion para añadir a la lista de dialogos
 	bool AddDialog(Dialog* dialog);
@@ -52,6 +53,8 @@ public:
 
 	bool isPlaying;
 
+	uint32 autoNextTime_show;
+	Timer autoNextTime_TimerDown;
 
 private:
 

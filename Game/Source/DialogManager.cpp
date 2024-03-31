@@ -34,14 +34,14 @@ bool DialogManager::Awake(pugi::xml_node config)
 
 bool DialogManager::Start() {
 
-	bool ret = true; 
+	bool ret = true;
 
 	uint windowW, windowH;
 	app->win->GetWindowSize(windowW, windowH);
-	
+
 	//Calculo del tamaño de la caja de texto
 	textBoundWidth = windowW - dialogMargin[1] - dialogMargin[3];
-	
+
 
 	indexText = 1;
 
@@ -77,7 +77,7 @@ Dialog* DialogManager::CreateDialog(pugi::xml_node itemNode, std::string name, c
 	dialog->name = itemNode.attribute("name").as_string(dialog->name.c_str());
 	dialog->face_tex = app->tex->Load(itemNode.attribute("facetexturepath").as_string(faceTexturePath));
 	dialog->font = FontSelector(itemNode.attribute("font").as_string(font));
-	
+
 
 	const char* type = itemNode.attribute("type").as_string("");
 
@@ -111,6 +111,21 @@ void DialogManager::CreateDialogSinEntity(std::string Texto, std::string nombre)
 	app->dialogManager->AddDialog(dialogoPesca);
 }
 
+void DialogManager::AutoNextDiagolo(int autoNextTime)
+{
+	isPlaying = (dialogues.Count() > 0);
+	autoNextTime_show = autoNextTime_TimerDown.CountDown(autoNextTime);
+	
+	if (isPlaying) {
+		if ((int)autoNextTime_show == 0) {
+			printf("\n%d", autoNextTime_show);
+			indexText = 1;
+			dialogues.Del(dialogues.At(0));
+			app->scene->GetRod()->dialogoautoclose = false;
+		}
+	}
+}
+
 bool DialogManager::AddDialog(Dialog* dialog)
 {
 	dialogues.Add(dialog);
@@ -123,7 +138,7 @@ bool DialogManager::ShowDialog(Dialog* dialog)
 	app->render->DrawTexture(background_tex, dialogPosition.x, dialogPosition.y, 0, 0);
 
 	std::string actualText = dialog->sentence.substr(0, indexText);
-	
+
 
 	//Inicializando las variables para las texturas
 	SDL_Texture* textTexture = nullptr;
@@ -153,7 +168,7 @@ bool DialogManager::ShowDialog(Dialog* dialog)
 	//Textura dialogo
 	textTexture = CreateTextTexture(dialog->font, actualText.c_str(), textColor, _textBoundWidth);
 	app->render->DrawTexture(textTexture, _dialogPosition.x, _dialogPosition.y, 0, 0);
-	
+
 	//Imagen del personaje
 	if (dialog->face_tex != nullptr) {
 		app->render->DrawTexture(dialog->face_tex, dialogMargin[3] + dialogPosition.x, dialogMargin[0] + dialogPosition.y, 0, 0);
@@ -163,7 +178,7 @@ bool DialogManager::ShowDialog(Dialog* dialog)
 
 	//Nombre personaje
 	textNameTexture = CreateTextTexture(app->render->primary_font, dialog->name.c_str(), textColor, textNameBoundWidth);
-	app->render->DrawTexture(textNameTexture, dialogMargin[3]+ dialogPosition.x + namePosition.x, dialogMargin[0] + dialogPosition.y + namePosition.y, 0, 0);
+	app->render->DrawTexture(textNameTexture, dialogMargin[3] + dialogPosition.x + namePosition.x, dialogMargin[0] + dialogPosition.y + namePosition.y, 0, 0);
 
 
 	//Opciones
@@ -175,11 +190,11 @@ bool DialogManager::ShowDialog(Dialog* dialog)
 
 		//Textura opcion2
 		options2NameTexture = CreateTextTexture(app->render->primary_font, dialog->option2.c_str(), (optionSelected == 2) ? optionSelectedColor : optionColor, optionsBoundWidth);
-		app->render->DrawTexture(options2NameTexture, dialogMargin[3] + dialogPosition.x + optionsPosition.x, dialogMargin[0] + dialogPosition.y + optionsDistanceBetween*2, 0, 0);
+		app->render->DrawTexture(options2NameTexture, dialogMargin[3] + dialogPosition.x + optionsPosition.x, dialogMargin[0] + dialogPosition.y + optionsDistanceBetween * 2, 0, 0);
 	}
 
 
-	
+
 
 	//Optimizacion de la memoria
 	SDL_DestroyTexture(textTexture);
@@ -197,7 +212,7 @@ bool DialogManager::ShowDialog(Dialog* dialog)
 			indexText++;
 			charTimer.Start();
 		}
-		
+
 		return false;
 	}
 
@@ -209,7 +224,7 @@ SDL_Texture* DialogManager::CreateTextTexture(TTF_Font* font, const char* text, 
 	SDL_Surface* textSurface = nullptr;
 	SDL_Texture* textTexture = nullptr;
 
-	
+
 
 	textSurface = TTF_RenderUTF8_Blended_Wrapped(font, text, color, textBoundWidth);
 	textTexture = SDL_CreateTextureFromSurface(app->render->renderer, textSurface);
@@ -245,7 +260,7 @@ bool DialogManager::Update(float dt) {
 	isPlaying = (dialogues.Count() > 0);
 
 	if (isPlaying) { //Entonces mostrar dialogos
-		
+
 
 		Dialog* actualDialog = dialogues.At(0)->data;
 		bool dialogFinished = ShowDialog(actualDialog);
@@ -278,7 +293,7 @@ bool DialogManager::Update(float dt) {
 			else if (optionSelected == 2) {
 				dialogues.InsertAfter(0, actualDialog->options2);
 			}
-			
+
 
 			//Reiniciar varialbes de dialogo y quitar el dialogo actual de su lista
 			optionSelected = 0;
@@ -290,7 +305,7 @@ bool DialogManager::Update(float dt) {
 		else if (!dialogFinished && app->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN && indexText > 2) {
 			indexText = 999;
 		}
-		
+
 
 
 	}

@@ -76,32 +76,32 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		velocity.y += -0.2 * dt;
 		currentAnimation = &walk_U;
-		player_Direction = Direction::UP;
 		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; app->scene->GetRod()->fishing.startFishing = false;}
 		else { playermove = false; }
+		player_Direction = Direction::UP;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		velocity.y += 0.2 * dt;
 		currentAnimation = &walk_D;
-		player_Direction = Direction::DOWN;
 		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; app->scene->GetRod()->fishing.startFishing = false; }
 		else { playermove = false; }
+		player_Direction = Direction::DOWN;
 	}
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		currentAnimation = &walk_L;
-		player_Direction = Direction::LEFT;
 		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; app->scene->GetRod()->fishing.startFishing = false; }
 		else { playermove = false; }
+		player_Direction = Direction::LEFT;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
 		currentAnimation = &walk_R;
-		player_Direction = Direction::RIGHT;
 		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; app->scene->GetRod()->fishing.startFishing = false; }
 		else { playermove = false; }
+		player_Direction = Direction::RIGHT;
 	}
 
 
