@@ -17,6 +17,8 @@ class RodSystem : public Entity
 {
 public:
 
+	
+
 	RodSystem();
 	virtual ~RodSystem();
 
@@ -37,6 +39,9 @@ public:
 	void hooked(int player_click_count);
 	void GamePlaye(Fishlevel fishleve);
 	void fishingOver();
+	void resetProbability();
+	void changeProbability(double nothing, double trash, double small, double medium, double big);
+	int getRandomNumber(int min, int max);
 
 public:
 
@@ -92,6 +97,7 @@ public:
 	int dialogoTimeCount;
 	bool fishingEndCloseDialogo = false;
 	bool isEnd = false;
+	int gamePlayTime;
 
 	//gailv
 	

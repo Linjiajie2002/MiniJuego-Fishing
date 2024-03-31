@@ -36,6 +36,8 @@ std::map<Fishlevel, double> prizes = {
 	{Fishlevel::BIG, big_probability}
 };
 
+
+
 RodSystem::RodSystem() : Entity(EntityType::ROD)
 {
 	name.Create("rodsystem");
@@ -57,15 +59,12 @@ bool RodSystem::Start() {
 	fishingfloat_texture = app->tex->Load(fishingfloat_path);
 
 
-	//prizes[Fishlevel::NOTHING] = numberes0;
-	//prizes[Fishlevel::BIG] = numberes1;
+
 	return true;
 }
 
 bool RodSystem::Update(float dt)
 {
-	
-
 
 	if (dialogoautoclose) {
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
@@ -112,13 +111,12 @@ bool RodSystem::Update(float dt)
 				dialogoautoclose = true;
 				app->dialogManager->CreateDialogSinEntity("Ostia Puta ha pescado", "jiajie");
 				playerGoplay = true;
+				gamePlayTime = getRandomNumber(3, 6);
 				gamePlayTimeLimit.Start();
 				app->dialogManager->autoNextTime_TimerDown.Start();
 				//printf("hoook");
 			}
-			if (ishooked) {
-				ishooked = false;
-			}
+
 
 			//player count
 			if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
@@ -134,7 +132,6 @@ bool RodSystem::Update(float dt)
 				playerGoplay_TimeOver = false;
 				dialogoTimeCount = 0;
 				dialogoautoclose = true;
-				printf("\nAcanado");
 				app->dialogManager->CreateDialogSinEntity("joder, porque no pesca", "jiajie");
 				app->dialogManager->autoNextTime_TimerDown.Start();
 				fishingOver();
@@ -162,7 +159,6 @@ bool RodSystem::CleanUp()
 
 	return true;
 }
-
 
 void RodSystem::castingline(FISHINGTYPE type)
 {
@@ -280,6 +276,29 @@ void RodSystem::selectFishingtype()
 
 void RodSystem::hooked(int player_click_count)
 {
+
+	if (player_click_count < 10) {
+		changeProbability(0.4, 0.3, 0.15, 0.1, 0.05);
+	}
+	else if (player_click_count >= 10 && player_click_count < 20) {
+		changeProbability(0.3, 0.4, 0.15, 0.1, 0.05);
+	}
+	else if (player_click_count >= 20 && player_click_count < 30) {
+		changeProbability(0.25, 0.35, 0.2, 0.15, 0.05);
+	}
+	else if (player_click_count >= 30 && player_click_count < 40) {
+
+		changeProbability(0.2, 0.35, 0.2, 0.15, 0.1);
+	}
+	else if (player_click_count >= 40 && player_click_count < 50) {
+
+		changeProbability(0.1, 0.25, 0.3, 0.2, 0.15);
+	}
+	else if (player_click_count > 50) {
+
+		changeProbability(0.0, 0.0, 0.0, 0.0, 1.0);
+	}
+
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<double> dis(0.0, 1.0);
@@ -293,6 +312,10 @@ void RodSystem::hooked(int player_click_count)
 			selected_prize = prize.first;
 			break;
 		}
+	}
+
+	for (const auto& prize : prizes) {
+		printf("\n%f",prize.second);
 	}
 
 
@@ -314,12 +337,12 @@ void RodSystem::hooked(int player_click_count)
 	app->dialogManager->CreateDialogSinEntity("you click" + strNumber, "jiajie");
 	app->dialogManager->autoNextTime_TimerDown.Start();
 	fishingOver();
-	printf("\ndddd");
+	resetProbability();
 }
 
 void RodSystem::GamePlaye(Fishlevel fishleve)
 {
-	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(5);
+	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(gamePlayTime);
 
 	printf("\n%d", (int)gamePlayTimeLimit_show);
 	if ((float)gamePlayTimeLimit_show == 0) {
@@ -332,20 +355,43 @@ void RodSystem::GamePlaye(Fishlevel fishleve)
 		}
 		player_click_count = 0;
 	}
+}
 
+void RodSystem::resetProbability() {
+	nothing_probability = 0.4;
+	trash_probability = 0.3;
+	small_probability = 0.15;
+	medium_probability = 0.1;
+	big_probability = 0.05;
 
-	/*switch (fishleve)
-	{
-	case Fishlevel::NOTHING: frequency_of_goals =3; break;
-	case Fishlevel::TRASH: frequency_of_goals = 5; break;
-	case Fishlevel::SMALL:  frequency_of_goals = 7; break;
-	case Fishlevel::MEDIUM:  frequency_of_goals = 15; break;
-	case Fishlevel::BIG:frequency_of_goals = 20; break;
-	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
-	}*/
+	prizes[Fishlevel::NOTHING] = nothing_probability;
+	prizes[Fishlevel::TRASH] = trash_probability;
+	prizes[Fishlevel::SMALL] = small_probability;
+	prizes[Fishlevel::MEDIUM] = medium_probability;
+	prizes[Fishlevel::BIG] = big_probability;
 
+}
 
+void RodSystem::changeProbability(double nothing, double trash, double small, double medium, double big)
+{
+	nothing_probability = nothing;
+	trash_probability = trash;
+	small_probability = small;
+	medium_probability = medium;
+	big_probability = big;
 
+	prizes[Fishlevel::NOTHING] = nothing_probability;
+	prizes[Fishlevel::TRASH] = trash_probability;
+	prizes[Fishlevel::SMALL] = small_probability;
+	prizes[Fishlevel::MEDIUM] = medium_probability;
+	prizes[Fishlevel::BIG] = big_probability;
+}
+
+int RodSystem::getRandomNumber(int min, int max) {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(min, max);
+	return dis(gen);
 }
 
 void RodSystem::fishingOver()
@@ -370,15 +416,11 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::LAGO:
 		fishing.startFishing = true;
 		dialogoPlayerMoving = true;
-		timeFishing.Start();
-		lotteryrandomNum = rand() % 3 + 2;
+		timeFishing.Start(); 
+		lotteryrandomNum = getRandomNumber(2, 4);
 		thistimehooked = true;
 
-		/*dialogoTimeCount = 0;
-		dialogoautoclose = true;*/
 		app->dialogManager->CreateDialogSinEntity("fishing", "jiajie");
-		app->dialogManager->autoNextTime_TimerDown.Start();
-
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
