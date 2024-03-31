@@ -65,10 +65,11 @@ bool RodSystem::Start() {
 
 bool RodSystem::Update(float dt)
 {
-
+	//tanca dialogo automatica
 	if (dialogoautoclose) {
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
+
 	//StartFishing
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		fishing.isFishing = !fishing.isFishing;
@@ -99,7 +100,6 @@ bool RodSystem::Update(float dt)
 		}
 	}
 
-
 	//printf("\nstartFishing%d", fishing.startFishing);
 	//GamePlaye
 	if (fishing.startFishing) {
@@ -109,7 +109,7 @@ bool RodSystem::Update(float dt)
 				ishooked = true;
 				dialogoTimeCount = 0;
 				dialogoautoclose = true;
-				app->dialogManager->CreateDialogSinEntity("Ostia Puta ha pescado", "jiajie");
+				app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
 				playerGoplay = true;
 				gamePlayTime = getRandomNumber(3, 6);
 				gamePlayTimeLimit.Start();
@@ -128,27 +128,28 @@ bool RodSystem::Update(float dt)
 
 			//if player no play, end fishing
 			if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
+
 				player_click_count_TimeOver = 0;
 				playerGoplay_TimeOver = false;
 				dialogoTimeCount = 0;
 				dialogoautoclose = true;
-				app->dialogManager->CreateDialogSinEntity("joder, porque no pesca", "jiajie");
+				app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
 				app->dialogManager->autoNextTime_TimerDown.Start();
 				fishingOver();
-				fishingEndCloseDialogo = true;
+
 			}
 		}
 
-		if (isEnd) {
-			printf("\nPescaTerminado %d", fishingEndCloseDialogo);
-			dialogoTimeCount = 2;
-			dialogoautoclose = true;
-			app->dialogManager->autoNextTime_TimerDown.Start();
-			fishingEndCloseDialogo = false;
-			isEnd = false;
-		}
+
 	}
 
+	if (isEnd) {
+		dialogoTimeCount = 2;
+		dialogoautoclose = true;
+		app->dialogManager->autoNextTime_TimerDown.Start();
+		fishingEndCloseDialogo = false;
+		isEnd = false;
+	}
 	return true;
 }
 
@@ -315,18 +316,18 @@ void RodSystem::hooked(int player_click_count)
 	}
 
 	for (const auto& prize : prizes) {
-		printf("\n%f",prize.second);
+		printf("\n%f", prize.second);
 	}
 
 
 
 	switch (selected_prize)
 	{
-	case Fishlevel::NOTHING: printf("\nYou get Nothing"); break;
-	case Fishlevel::TRASH:  printf("\nYou get TRASH"); break;
-	case Fishlevel::SMALL:  printf("\nYou get SMALL"); break;
-	case Fishlevel::MEDIUM:  printf("\nYou get MEDIUM"); break;
-	case Fishlevel::BIG:printf("\nYou get BIG"); break;
+	case Fishlevel::NOTHING: fishName = "NOTHING"; break;
+	case Fishlevel::TRASH: fishName = "TRASH"; break;
+	case Fishlevel::SMALL:  fishName = "SMALL"; break;
+	case Fishlevel::MEDIUM:  fishName = "MEDIUM"; break;
+	case Fishlevel::BIG:fishName = "BIG"; break;
 	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
 	}
 
@@ -334,7 +335,7 @@ void RodSystem::hooked(int player_click_count)
 
 	dialogoTimeCount = 0;
 	dialogoautoclose = true;
-	app->dialogManager->CreateDialogSinEntity("you click" + strNumber, "jiajie");
+	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "jiajie");
 	app->dialogManager->autoNextTime_TimerDown.Start();
 	fishingOver();
 	resetProbability();
@@ -344,7 +345,7 @@ void RodSystem::GamePlaye(Fishlevel fishleve)
 {
 	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(gamePlayTime);
 
-	printf("\n%d", (int)gamePlayTimeLimit_show);
+	//printf("\n%d", (int)gamePlayTimeLimit_show);
 	if ((float)gamePlayTimeLimit_show == 0) {
 		printf("\nTimeStop, you get click %d veces", player_click_count);
 		playerGoplay = false;
@@ -396,6 +397,9 @@ int RodSystem::getRandomNumber(int min, int max) {
 
 void RodSystem::fishingOver()
 {
+	if (app->scene->GetPlayer()->playermove == false) {
+		fishingEndCloseDialogo = true;
+	}
 	fishing.isFishing = false;
 	fishing.startFishing = false;
 	if (!fishing.isFishing) {
@@ -416,7 +420,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::LAGO:
 		fishing.startFishing = true;
 		dialogoPlayerMoving = true;
-		timeFishing.Start(); 
+		timeFishing.Start();
 		lotteryrandomNum = getRandomNumber(2, 4);
 		thistimehooked = true;
 

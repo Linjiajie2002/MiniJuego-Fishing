@@ -85,6 +85,7 @@ public:
 	bool playerGoplay = false;
 	bool playerGoplay_TimeOver = false;
 	Fishlevel selected_prize;
+	std::string fishName;
 
 	//GamePlay
 	Timer gamePlayTimeLimit;

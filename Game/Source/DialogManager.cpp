@@ -118,7 +118,10 @@ void DialogManager::AutoNextDiagolo(int autoNextTime)
 	
 	if (isPlaying) {
 		if ((int)autoNextTime_show == 0) {
-
+			
+			if (app->scene->GetRod()->fishingEndCloseDialogo == true) {
+				app->scene->GetRod()->isEnd = true;
+			}
 			indexText = 1;
 			dialogues.Del(dialogues.At(0));
 			app->scene->GetRod()->dialogoautoclose = false;
