@@ -70,12 +70,25 @@ bool RodSystem::Update(float dt)
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
 
-	//StartFishing
+	if (!fishing.isFishing) {
+		if (app->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) {
+			if (fishing.fishingtype == FISHINGTYPE::FISHING) {
+				printf("LUREFISHING");
+				fishing.fishingtype = FISHINGTYPE::LUREFISHING;
+			}
+			else
+			{
+				fishing.fishingtype = FISHINGTYPE::FISHING;
+				printf("FISHING");
+			}
+		}
+	}
 
+	//StartFishing
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		fishing.isFishing = !fishing.isFishing;
 		isFishingta = fishing.isFishing;
-
+		//Cancelar
 		if (!fishing.isFishing) {
 			app->dialogManager->autoNextTime_TimerDown.Start();
 			dialogoTimeCount = 0;
@@ -87,9 +100,15 @@ bool RodSystem::Update(float dt)
 		castingline(fishingtype);
 	}
 
+	//Animation float
 	if (fishingfloat_lineReady) {
-
-		ani_castingline(app->scene->GetPlayer()->player_Direction);
+		if (fishing.fishingtype == FISHINGTYPE::FISHING) {
+			ani_castingline(app->scene->GetPlayer()->player_Direction);
+		}
+		else {
+			ani_castingline_lure(app->scene->GetPlayer()->player_Direction);
+		}
+		
 	}
 
 
@@ -109,42 +128,14 @@ bool RodSystem::Update(float dt)
 	//printf("\nstartFishing%d", fishing.startFishing);
 	//GamePlaye
 	if (fishing.startFishing) {
-		if (timeFishing.ReadMSec() >= lotteryrandomNum * 1000) {
-			if (thistimehooked) {
-				thistimehooked = false;
-				ishooked = true;
-				dialogoTimeCount = 0;
-				dialogoautoclose = true;
-				app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
-				playerGoplay = true;
-				gamePlayTime = getRandomNumber(3, 6);
-				gamePlayTimeLimit.Start();
-				app->dialogManager->autoNextTime_TimerDown.Start();
-				//printf("hoook");
-			}
-
-
-			//player count
-			if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
-				player_click_count += 1;
-			}
-			if (playerGoplay == true) {
-				GamePlaye(selected_prize);
-			}
-
-			//if player no play, end fishing
-			if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
-
-				player_click_count_TimeOver = 0;
-				playerGoplay_TimeOver = false;
-				dialogoTimeCount = 0;
-				dialogoautoclose = true;
-				app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
-				app->dialogManager->autoNextTime_TimerDown.Start();
-				fishingOver();
-
-			}
+		if (fishing.fishingtype == FISHINGTYPE::FISHING) {
+			playNormalFishing();
 		}
+		else {
+			//printf("aun no tiene play");
+		}
+
+		
 
 
 	}
@@ -186,18 +177,21 @@ void RodSystem::castingline(FISHINGTYPE type)
 
 void RodSystem::ani_castingline(Direction direction)
 {
-
+	//obtener position de player
 	if (fishingfloat_getPlayerPosition) {
 		fishingflota_position_x = app->scene->GetPlayer()->position.x;
 		fishingflota_position_y = app->scene->GetPlayer()->position.y;
 		fishingfloat_getPlayerPosition = false;
 	}
 
-	if (direction == Direction::UP) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y - 100; }
-	else if (direction == Direction::DOWN) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + 100; }
-	else if (direction == Direction::LEFT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x - 100; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
-	else if (direction == Direction::RIGHT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x + 100; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
-	else { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + 100; }
+	floatDistance = 100;
+
+	if (direction == Direction::UP) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y - floatDistance; }
+	else if (direction == Direction::DOWN) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + floatDistance; }
+	else if (direction == Direction::LEFT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x - floatDistance; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
+	else if (direction == Direction::RIGHT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x + floatDistance; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
+	else { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + floatDistance; }
+
 	if (floatbody == nullptr && crearfloatbody) {
 		floatbody = app->physics->CreateRectangleSensor(app->scene->GetPlayer()->position.x, app->scene->GetPlayer()->position.y, 20, 20, bodyType::DYNAMIC);
 		floatbody->ctype = ColliderType::FLOAT;
@@ -270,16 +264,136 @@ void RodSystem::ani_castingline(Direction direction)
 
 }
 
-void RodSystem::selectFishingtype()
+
+void RodSystem::ani_castingline_lure(Direction direction)
 {
-	if (changefishingtype) {
-		fishingtype = FISHINGTYPE::LUREFISHING;
+	//obtener position de player
+	if (fishingfloat_getPlayerPosition) {
+		fishingflota_position_x = app->scene->GetPlayer()->position.x;
+		fishingflota_position_y = app->scene->GetPlayer()->position.y;
+		fishingfloat_getPlayerPosition = false;
 	}
-	else
-	{
-		fishingtype = FISHINGTYPE::FISHING;
+
+	floatDistance = 300;
+
+	if (direction == Direction::UP) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y - floatDistance; }
+	else if (direction == Direction::DOWN) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + floatDistance; }
+	else if (direction == Direction::LEFT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x - floatDistance; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
+	else if (direction == Direction::RIGHT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x + floatDistance; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
+	else { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + floatDistance; }
+
+	if (floatbody == nullptr && crearfloatbody) {
+		floatbody = app->physics->CreateRectangleSensor(app->scene->GetPlayer()->position.x, app->scene->GetPlayer()->position.y, 20, 20, bodyType::DYNAMIC);
+		floatbody->ctype = ColliderType::FLOAT;
+		floatbody->body->SetFixedRotation(true);
+		floatbody->listener = this;
+		crearfloatbody = false;
+
+	}
+
+	float timeLerp = 0.1f;
+	fishingflota_position_x = fishingflota_position_x * (1 - timeLerp) + fishingflota_CenterX * timeLerp;
+	fishingflota_position_y = fishingflota_position_y * (1 - timeLerp) + fishingflota_CenterY * timeLerp;
+
+
+	float cheke_x = (METERS_TO_PIXELS(floatbody->body->GetPosition().x) - texH / 2) - 23;
+	float cheke_y = (METERS_TO_PIXELS(floatbody->body->GetPosition().y) - texH / 2) - 23;
+
+
+	if (direction == Direction::UP) {
+		if (cheke_y >= fishingflota_position_y) {
+			b2Vec2 force(0.0f, -10.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
+	}
+	else if (direction == Direction::DOWN) {
+		if (cheke_y <= fishingflota_position_y) {
+			b2Vec2 force(0.0f, 10.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
+	}
+	else if (direction == Direction::LEFT) {
+		if (cheke_x >= fishingflota_position_x) {
+			b2Vec2 force(-10.0f, 0.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
+	}
+	else if (direction == Direction::RIGHT) {
+		if (cheke_x <= fishingflota_position_x) {
+			b2Vec2 force(10.0f, 0.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
+	}
+	else {
+		if (cheke_y <= fishingflota_position_y) {
+			b2Vec2 force(0.0f, 10.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
+	}
+
+
+}
+
+void RodSystem::playNormalFishing()
+{
+	if (timeFishing.ReadMSec() >= lotteryrandomNum * 1000) {
+		if (thistimehooked) {
+			thistimehooked = false;
+			ishooked = true;
+			dialogoTimeCount = 0;
+			dialogoautoclose = true;
+			app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
+			playerGoplay = true;
+			gamePlayTime = getRandomNumber(3, 6);
+			gamePlayTimeLimit.Start();
+			app->dialogManager->autoNextTime_TimerDown.Start();
+			//printf("hoook");
+		}
+
+
+		//player count
+		if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
+			player_click_count += 1;
+		}
+		if (playerGoplay == true) {
+			GamePlaye(selected_prize);
+		}
+
+		//if player no play, end fishing
+		if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
+
+			player_click_count_TimeOver = 0;
+			playerGoplay_TimeOver = false;
+			dialogoTimeCount = 0;
+			dialogoautoclose = true;
+			app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
+			app->dialogManager->autoNextTime_TimerDown.Start();
+			fishingOver();
+
+		}
 	}
 }
+
 
 void RodSystem::hooked(int player_click_count)
 {

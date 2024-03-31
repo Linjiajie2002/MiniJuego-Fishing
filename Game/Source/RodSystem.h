@@ -35,10 +35,11 @@ public:
 public:
 	void castingline(FISHINGTYPE type);
 	void ani_castingline(Direction direction);
-	void selectFishingtype();
-	void hooked(int player_click_count);
+	void ani_castingline_lure(Direction direction);
+	void playNormalFishing();
 	void GamePlaye(Fishlevel fishleve);
 	void fishingOver();
+	void hooked(int player_click_count);
 	void resetProbability();
 	void changeProbability(double nothing, double trash, double small, double medium, double big);
 	int getRandomNumber(int min, int max);
@@ -73,9 +74,11 @@ public:
 	bool isFishingta = false;
 	bool crearfloatbody = false;
 	PhysBody* floatbody = nullptr;
+	float floatDistance;
+
 	//fishingType
 	FISHINGTYPE fishingtype;
-	bool changefishingtype = false;
+
 
 	//StartFishing
 	Timer timeFishing;
@@ -86,6 +89,7 @@ public:
 	bool playerGoplay_TimeOver = false;
 	Fishlevel selected_prize;
 	std::string fishName;
+	
 
 	//GamePlay
 	Timer gamePlayTimeLimit;
