@@ -42,7 +42,12 @@
 		  <repeat_sentences>
 			  <sentence text="Se me ha acabado el repertorio de chistes, vuelve en otro momento..."/>
 		  </repeat_sentences>
+		  
+		  
+		  
 	  </dialogTrigger>
+	  
+	  
 	  
 	  <rodsystem>
 		  <fishingfloat texturepath="Assets/Textures/fishingfloat.png" />

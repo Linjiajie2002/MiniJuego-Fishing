@@ -255,19 +255,11 @@ bool DialogManager::Update(float dt) {
 
 		//Siguiente dialogo
 		if (dialogFinished && app->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN && actualDialog->type != DialogType::CHOOSE) {
-			
-			
 			indexText = 1;
 			dialogues.Del(dialogues.At(0));
-			
-			
-
-
 		}
 		//Gestion de las opciones
 		else if (dialogFinished && app->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN && optionSelected != 0 && actualDialog->type == DialogType::CHOOSE) {
-		
-			
 			if (optionSelected == 1) {
 				dialogues.InsertAfter(0, actualDialog->options1);
 			}

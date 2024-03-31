@@ -16,6 +16,7 @@
 #include "App.h"
 #include "Fishing.h"
 #include "FishingManager.h"
+#include "DialogTriggerEntity.h"
 #include <map>
 #include <random>
 
@@ -56,10 +57,6 @@ bool RodSystem::Start() {
 
 bool RodSystem::Update(float dt)
 {
-
-
-
-
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		fishing.isFishing = !fishing.isFishing;
 		isFishingta = fishing.isFishing;
@@ -95,8 +92,26 @@ bool RodSystem::Update(float dt)
 			if (thistimehooked) {
 				hooked();
 				thistimehooked = false;
+				ishooked = true;
+				printf("hoook");
 			}
-			if (timeFishing.ReadMSec() >= 5000) {
+
+			if (ishooked) {
+				timehookedLimit.Start();
+				ishooked = false;
+			}
+			if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
+				playerGoplay = true;
+				player_click_count += 1;
+				if (player_click_count == 1) {
+					gamePlayTimeLimit.Start();
+				}	
+			}
+			
+			if (playerGoplay == true) {
+				GamePlaye(selected_prize);
+			}
+			if (timehookedLimit.ReadMSec() >= 3000 && playerGoplay == false) {
 				fishing.startFishing = false;
 				fishing.isFishing = false;
 				if (!fishing.isFishing) {
@@ -104,14 +119,10 @@ bool RodSystem::Update(float dt)
 				}
 				castingline(fishingtype);
 			}
+
+				
 		}
 	}
-
-
-
-
-
-
 
 	return true;
 }
@@ -239,8 +250,6 @@ void RodSystem::selectFishingtype()
 	}
 }
 
-
-
 void RodSystem::hooked()
 {
 	std::random_device rd;
@@ -248,9 +257,8 @@ void RodSystem::hooked()
 	std::uniform_real_distribution<double> dis(0.0, 1.0);
 	double random_number = dis(gen);
 
-	// 根据概率分配抽奖
 	double cumulative_probability = 0.0;
-	Fishlevel selected_prize;
+	selected_prize;
 	for (const auto& prize : prizes) {
 		cumulative_probability += prize.second;
 		if (random_number <= cumulative_probability) {
@@ -270,9 +278,30 @@ void RodSystem::hooked()
 	}
 }
 
+void RodSystem::GamePlaye(Fishlevel fishleve)
+{
+	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(5);
+
+	printf("\n%d",(int)gamePlayTimeLimit_show);
+	if ((float)gamePlayTimeLimit_show == 0) {
+		printf("\nTimeStop, you get click %d veces", player_click_count);
+
+	}
 
 
+	/*switch (fishleve)
+	{
+	case Fishlevel::NOTHING: frequency_of_goals =3; break;
+	case Fishlevel::TRASH: frequency_of_goals = 5; break;
+	case Fishlevel::SMALL:  frequency_of_goals = 7; break;
+	case Fishlevel::MEDIUM:  frequency_of_goals = 15; break;
+	case Fishlevel::BIG:frequency_of_goals = 20; break;
+	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
+	}*/
+	
 
+
+}
 
 void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
@@ -283,7 +312,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 		fishing.startFishing = true;
 		timeFishing.Start();
 		lotteryrandomNum = rand() % 3 + 2;
-		thistimehooked = true;
+		thistimehooked = true;		
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

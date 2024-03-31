@@ -163,6 +163,11 @@ RodSystem* Scene::GetRod()
 	return rodsystem;
 }
 
+DialogTrigger* Scene::GetDialogTrigger()
+{
+	return dialogtrigger;
+}
+
 // Called each loop iteration
 bool Scene::PostUpdate()
 {

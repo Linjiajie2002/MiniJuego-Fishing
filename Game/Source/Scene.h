@@ -7,6 +7,7 @@
 #include "GuiControlButton.h"
 #include "Player.h"
 #include "RodSystem.h"
+#include "DialogTriggerEntity.h"
 
 struct SDL_Texture;
 
@@ -45,6 +46,7 @@ public:
 
 	Player* GetPlayer();
 	RodSystem* GetRod();
+	DialogTrigger* GetDialogTrigger();
 
 private:
 	SDL_Texture* img;
@@ -63,6 +65,7 @@ private:
 public:
 	Player* player = new Player;
 	RodSystem* rodsystem = new RodSystem;
+	DialogTrigger* dialogtrigger = new DialogTrigger;
 };
 
 #endif // __SCENE_H__
