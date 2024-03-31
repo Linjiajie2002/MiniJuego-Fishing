@@ -71,16 +71,22 @@ bool RodSystem::Update(float dt)
 	}
 
 	//StartFishing
+
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		fishing.isFishing = !fishing.isFishing;
 		isFishingta = fishing.isFishing;
 
 		if (!fishing.isFishing) {
-
+			app->dialogManager->autoNextTime_TimerDown.Start();
+			dialogoTimeCount = 0;
+			dialogoautoclose = true;
+			dialogoPlayerMoving = false;
 			fishingfloat_getPlayerPosition = true;
+			fishingOver();
 		}
 		castingline(fishingtype);
 	}
+
 	if (fishingfloat_lineReady) {
 
 		ani_castingline(app->scene->GetPlayer()->player_Direction);
