@@ -22,15 +22,18 @@
 #include <map>
 #include <random>
 
+double nothing_probability = 0.4;
+double trash_probability = 0.3;
+double small_probability = 0.15;
+double medium_probability = 0.1;
+double big_probability = 0.05;
+
 std::map<Fishlevel, double> prizes = {
-	{Fishlevel::NOTHING, 0.4},
-	{Fishlevel::TRASH, 0.3},
-	{Fishlevel::SMALL, 0.15},
-	{Fishlevel::MEDIUM, 0.1},
-	{Fishlevel::BIG, 0.05}
-	/*{"small", 0.3},
-	{"medium", 0.15},
-	{"big", 0.05} */
+	{Fishlevel::NOTHING, nothing_probability},
+	{Fishlevel::TRASH, trash_probability},
+	{Fishlevel::SMALL, small_probability},
+	{Fishlevel::MEDIUM, medium_probability},
+	{Fishlevel::BIG, big_probability}
 };
 
 RodSystem::RodSystem() : Entity(EntityType::ROD)
@@ -54,12 +57,16 @@ bool RodSystem::Start() {
 	fishingfloat_texture = app->tex->Load(fishingfloat_path);
 
 
+	//prizes[Fishlevel::NOTHING] = numberes0;
+	//prizes[Fishlevel::BIG] = numberes1;
 	return true;
 }
 
 bool RodSystem::Update(float dt)
 {
 	
+
+
 	if (dialogoautoclose) {
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
@@ -127,12 +134,21 @@ bool RodSystem::Update(float dt)
 				playerGoplay_TimeOver = false;
 				dialogoTimeCount = 0;
 				dialogoautoclose = true;
+				printf("\nAcanado");
 				app->dialogManager->CreateDialogSinEntity("joder, porque no pesca", "jiajie");
 				app->dialogManager->autoNextTime_TimerDown.Start();
 				fishingOver();
+				fishingEndCloseDialogo = true;
 			}
+		}
 
-
+		if (isEnd) {
+			printf("\nPescaTerminado %d", fishingEndCloseDialogo);
+			dialogoTimeCount = 2;
+			dialogoautoclose = true;
+			app->dialogManager->autoNextTime_TimerDown.Start();
+			fishingEndCloseDialogo = false;
+			isEnd = false;
 		}
 	}
 
@@ -334,13 +350,11 @@ void RodSystem::GamePlaye(Fishlevel fishleve)
 
 void RodSystem::fishingOver()
 {
-
-
 	fishing.isFishing = false;
+	fishing.startFishing = false;
 	if (!fishing.isFishing) {
 		fishingfloat_getPlayerPosition = true;
 	}
-
 	castingline(fishingtype);
 }
 

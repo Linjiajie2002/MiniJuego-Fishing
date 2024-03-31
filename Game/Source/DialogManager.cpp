@@ -118,7 +118,7 @@ void DialogManager::AutoNextDiagolo(int autoNextTime)
 	
 	if (isPlaying) {
 		if ((int)autoNextTime_show == 0) {
-			printf("\n%d", autoNextTime_show);
+
 			indexText = 1;
 			dialogues.Del(dialogues.At(0));
 			app->scene->GetRod()->dialogoautoclose = false;

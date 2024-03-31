@@ -90,6 +90,10 @@ public:
 	bool dialogoautoclose = false;
 	bool dialogoPlayerMoving = false;
 	int dialogoTimeCount;
+	bool fishingEndCloseDialogo = false;
+	bool isEnd = false;
+
+	//gailv
 	
 };
 #endif // __ITEM_H__#pragma once
