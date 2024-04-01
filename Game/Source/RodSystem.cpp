@@ -40,8 +40,8 @@ std::map<Fishlevel, double> fish = {
 
 //probability machine for lure fishing
 std::map<bool, double> isFishCaught = {
-	{true, 0.2},
-	{false, 0.8},
+	{true, 0.9},
+	{false, 0.1},
 };
 
 
@@ -95,29 +95,34 @@ bool RodSystem::Update(float dt)
 	}//end_if for check if fishing
 
 
-	//StartFishing
+	//Cast the rod and StartFishing
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
-		fishing.isFishing = !fishing.isFishing;
-		isFishingta = fishing.isFishing;
+		fishing.isFishing = !fishing.isFishing;//Start fishing o Stop fishing
+		isFishingta = fishing.isFishing;//Save data to "isFishingta"
 		if (lureDistanceGetRandom) {
 			lureDistance = getRandomNumber(3, 6);
 			floatChangeDistance = lureDistance * 100;
-		}
+		}//end_if is lurefishing and get irregular distance
 		else {
 			floatChangeDistance = 100;
-		}
-		//Cancelar
+		}//normal fishing distance
+
+
+		//Retrieve the rod
 		if (!fishing.isFishing) {
-			app->dialogManager->autoNextTime_TimerDown.Start();
-			dialogoTimeCount = 0;
-			dialogoautoclose = true;
-			dialogoPlayerMoving = false;
+			//Close dialogo
+			dialogoClose(0);
+
+			dialogoPlayerMoving = false;//
 			fishingfloat_getPlayerPosition = true;
-			fkeyFinishLine = true;
+			lureFinishLine = true;
 			fishingOver();
-		}
+		}//end_if for if not fishing
+
 		castingline(fishing.fishingtype);
-	}
+	}//end_if for press "F" key
+
+
 
 	//Animation float
 	if (fishingfloat_lineReady) {
@@ -127,15 +132,12 @@ bool RodSystem::Update(float dt)
 
 	//if player mover, end fishing
 	if (app->scene->GetPlayer()->playermove) {
-
-		fishingOver();
-
 		if (dialogoPlayerMoving) {
-			app->dialogManager->autoNextTime_TimerDown.Start();
-			dialogoTimeCount = 0;
-			dialogoautoclose = true;
+			//Close dialogo
+			dialogoClose(0);
 			dialogoPlayerMoving = false;
 		}
+		fishingOver();
 	}
 
 	//printf("\nstartFishing%d", fishing.startFishing);
@@ -154,10 +156,10 @@ bool RodSystem::Update(float dt)
 			}
 
 			if (isFishCaught_result) {
-				dialogoTimeCount = 0;
-				dialogoautoclose = true;
+
 				app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
-				app->dialogManager->autoNextTime_TimerDown.Start();
+				//Close dialogo
+				dialogoClose(0);
 				isFishCaught_result = false;
 				playerGoplay = true;
 				gamePlayTime = getRandomNumber(3, 6);
@@ -177,37 +179,36 @@ bool RodSystem::Update(float dt)
 
 				player_click_count_TimeOver = 0;
 				playerGoplay_TimeOver = false;
-				dialogoTimeCount = 0;
-				dialogoautoclose = true;
 				app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
-				app->dialogManager->autoNextTime_TimerDown.Start();
+				//Close dialogo
+				dialogoClose(0);
 				fishingOver();
 
 			}
 
-
-			if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN) {
-				printf("\nsorteo");
-				startFinishingLine = true;
-				lureRandomTime = true;
-				lure_lotteryrandomNum = getRandomNumber(3, 7);
-				timeFishing.Start();
-				if (floatChangeDistance == 100) {
-					fishing.isFishing = false;
-					printf("finishi");
-					if (!fishing.isFishing) {
-						dialogoTimeCount = 0;
-						dialogoautoclose = true;
-						app->dialogManager->autoNextTime_TimerDown.Start();
-						dialogoPlayerMoving = false;
-						fishingfloat_getPlayerPosition = true;
-						lureFinishLine = true;
-						fishingOver();
+			if (playerGoplay == false) {
+				if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN) {
+					printf("\nsorteo");
+					startFinishingLine = true;
+					lureRandomTime = true;
+					lure_lotteryrandomNum = getRandomNumber(3, 7);
+					timeFishing.Start();
+					if (floatChangeDistance == 100) {
+						fishing.isFishing = false;
+						printf("finishi");
+						if (!fishing.isFishing) {
+							//Close dialogo
+							dialogoClose(0);
+							dialogoPlayerMoving = false;
+							fishingfloat_getPlayerPosition = true;
+							lureFinishLine = true;
+							fishingOver();
+						}
+						castingline(fishing.fishingtype);
 					}
-					castingline(fishing.fishingtype);
-				}
-				else {
-					floatChangeDistance -= 100;
+					else {
+						floatChangeDistance -= 100;
+					}
 				}
 			}
 		}
@@ -215,9 +216,7 @@ bool RodSystem::Update(float dt)
 
 	if (isEnd) {
 		printf("\nEnddd");
-		dialogoTimeCount = 2;
-		dialogoautoclose = true;
-		app->dialogManager->autoNextTime_TimerDown.Start();
+		dialogoClose(2);
 		fishingEndCloseDialogo = false;
 		isEnd = false;
 	}
@@ -389,6 +388,13 @@ void RodSystem::fishing_line(Direction direction, float cheke_x, float cheke_y)
 
 
 
+}
+
+void RodSystem::dialogoClose(int time)
+{
+	dialogoTimeCount = time;
+	dialogoautoclose = true;
+	app->dialogManager->autoNextTime_TimerDown.Start();
 }
 
 
@@ -587,11 +593,11 @@ bool RodSystem::check_isFishCaught()
 void RodSystem::fishingOver()
 {
 	printf("\nplayermove: %d", app->scene->GetPlayer()->playermove);
-	if (app->scene->GetPlayer()->playermove == false && lureFinishLine == false && fkeyFinishLine == false) {
+	if (app->scene->GetPlayer()->playermove == false && lureFinishLine == false) {
 		fishingEndCloseDialogo = true;
 	}
+
 	lureFinishLine = false;
-	fkeyFinishLine = false;
 	fishing.isFishing = false;
 	fishing.startFishing = false;
 	if (!fishing.isFishing) {

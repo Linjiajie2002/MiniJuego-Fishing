@@ -45,6 +45,7 @@ public:
 	void changeProbability(double nothing, double trash, double small, double medium, double big);
 	void floatCollision(Direction direction,float cheke_x, float cheke_y);
 	void fishing_line(Direction direction, float cheke_x, float cheke_y);
+	void dialogoClose(int time);
 	bool check_isFishCaught();
 	int getRandomNumber(int min, int max);
 
@@ -88,7 +89,6 @@ public:
 	bool lureRandomTime = false;
 	bool isFishCaught_result = false;
 	bool lureFinishLine = false;
-	bool fkeyFinishLine = false;
 	Timer luretimeFishing;
 	//bool selected_prize;
 
