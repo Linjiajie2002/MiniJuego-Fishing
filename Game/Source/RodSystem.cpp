@@ -40,8 +40,8 @@ std::map<Fishlevel, double> fish = {
 
 //probability machine for lure fishing
 std::map<bool, double> isFishCaught = {
-	{true, 0.9},
-	{false, 0.1},
+	{true, 0.3},
+	{false, 0.7},
 };
 
 
