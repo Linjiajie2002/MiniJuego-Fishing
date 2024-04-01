@@ -101,7 +101,6 @@ public:
 	int lotteryrandomNum;
 	int lure_lotteryrandomNum;
 	bool thistimehooked = true;
-	bool ishooked = false;
 	bool playerGoplay = false;
 	bool playerGoplay_TimeOver = false;
 	Fishlevel selected_fish;

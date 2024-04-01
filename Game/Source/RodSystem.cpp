@@ -98,6 +98,14 @@ bool RodSystem::Update(float dt)
 	//Cast the rod and StartFishing
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		fishing.isFishing = !fishing.isFishing;//Start fishing o Stop fishing
+
+		/*if (fishing.isFishing == true && fishing.startFishing == false) {
+			fishing.isFishing = true;
+		}
+		else {
+			fishing.isFishing = !fishing.isFishing;//Start fishing o Stop fishing
+		}*///can fix the bug where collision does not reach the lago area, but it's not perfect
+		
 		isFishingta = fishing.isFishing;//Save data to "isFishingta"
 		if (lureDistanceGetRandom) {
 			lureDistance = getRandomNumber(3, 6);
@@ -152,19 +160,16 @@ bool RodSystem::Update(float dt)
 	}//end_if, if start fishing
 
 	if (isEnd) {
-		printf("\nEnd");
 		dialogoClose(2);
 		fishingEndCloseDialogo = false;
 		isEnd = false;
-	}
+	}//end_if, close last dialogo
 	return true;
 }
 
 
 bool RodSystem::CleanUp()
 {
-
-
 	return true;
 }
 
@@ -174,15 +179,15 @@ void RodSystem::castingline(FISHINGTYPE type)
 		if (fishing.isFishing) {
 			fishingfloat_lineReady = true;
 			crearfloatbody = true;
-		}
+		}//start
 		else {
 			fishingfloat_lineReady = false;
 			if (floatbody != nullptr) {
 				floatbody->body->GetWorld()->DestroyBody(floatbody->body);
 				floatbody = nullptr;
-			}
-		}
-	}
+			}//end_if, delete collision
+		}//end_if, if fishing
+	}//end_if, check if equipped with a fishing rod
 }
 
 void RodSystem::ani_castingline(Direction direction)
@@ -192,16 +197,18 @@ void RodSystem::ani_castingline(Direction direction)
 		fishingflota_position_x = app->scene->GetPlayer()->position.x;
 		fishingflota_position_y = app->scene->GetPlayer()->position.y;
 		fishingfloat_getPlayerPosition = false;
-	}
+	}//end_if, can get player position
 
 	floatDistance = floatChangeDistance;
 
+	//Calculate the final position of the float
 	if (direction == Direction::UP) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y - floatDistance; }
 	else if (direction == Direction::DOWN) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + floatDistance; }
 	else if (direction == Direction::LEFT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x - floatDistance; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
 	else if (direction == Direction::RIGHT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x + floatDistance; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
 	else { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + floatDistance; }
 
+	//crear float collision
 	if (floatbody == nullptr && crearfloatbody) {
 		floatbody = app->physics->CreateRectangleSensor(app->scene->GetPlayer()->position.x, app->scene->GetPlayer()->position.y, 20, 20, bodyType::DYNAMIC);
 		floatbody->ctype = ColliderType::FLOAT;
@@ -211,11 +218,12 @@ void RodSystem::ani_castingline(Direction direction)
 
 	}
 
+	//lerp
 	float timeLerp = 0.1f;
 	fishingflota_position_x = fishingflota_position_x * (1 - timeLerp) + fishingflota_CenterX * timeLerp;
 	fishingflota_position_y = fishingflota_position_y * (1 - timeLerp) + fishingflota_CenterY * timeLerp;
 
-
+	//moving collision
 	float cheke_x = (METERS_TO_PIXELS(floatbody->body->GetPosition().x) - texH / 2) - 23;
 	float cheke_y = (METERS_TO_PIXELS(floatbody->body->GetPosition().y) - texH / 2) - 23;
 
@@ -234,80 +242,75 @@ void RodSystem::playNormalFishing()
 	if (timeFishing.ReadMSec() >= lotteryrandomNum * 1000) {
 		if (thistimehooked) {
 			thistimehooked = false;
-			ishooked = true;
-			dialogoTimeCount = 0;
-			dialogoautoclose = true;
-			app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
-			playerGoplay = true;
-			gamePlayTime = getRandomNumber(3, 6);
-			gamePlayTimeLimit.Start();
-			app->dialogManager->autoNextTime_TimerDown.Start();
-			//printf("hoook");
+			//Close dialogo
+			dialogoClose(0);
+			//Crear new dialogo
+			app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "fishing System");
+			playerGoplay = true;//Start game play
+			gamePlayTime = getRandomNumber(3, 6);// Get play time
+			gamePlayTimeLimit.Start();// reset play time
 		}
 
 
-		//player count
+		
 		if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
 			player_click_count += 1;
-		}
+		}//end_if, player count
+
 		if (playerGoplay == true) {
 			GamePlaye();
-		}
+		}//end_if, gameplay
 
-		//if player no play, end fishing
+		
 		if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
-
-			player_click_count_TimeOver = 0;
+			player_click_count_TimeOver = 0;//reset
 			playerGoplay_TimeOver = false;
-			dialogoTimeCount = 0;
-			dialogoautoclose = true;
-			app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
-			app->dialogManager->autoNextTime_TimerDown.Start();
+			//Close dialogo
+			dialogoClose(0);
+			//Crear new dialogo
+			app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "fishing System");
 			fishingOver();
-
-		}
-	}
+		}//end_if player no play, end fishing
+	}//end_if, if fish is caught
 }
 
 void RodSystem::playLureFishing()
 {
-	//printf("\n%d", lure_lotteryrandomNum);
 	if (timeFishing.ReadMSec() >= lure_lotteryrandomNum * 1000 && lureRandomTime == true) {
 		isFishCaught_result = check_isFishCaught();
 		printf("\nResultado: %d ", isFishCaught_result);
 		lureRandomTime = false;
-	}
+	}//end_if, if fish is caught
 
 	if (isFishCaught_result) {
-
-		app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
 		//Close dialogo
 		dialogoClose(0);
+		//Crear new dialogo
+		app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
 		isFishCaught_result = false;
 		playerGoplay = true;
 		gamePlayTime = getRandomNumber(3, 6);
 		gamePlayTimeLimit.Start();
-	}
+	}//end_if, fish caught
 
 	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN && playerGoplay == true) {
 		player_click_count += 1;
-	}
+	}//end_if, press "K" key
 
 	if (playerGoplay == true) {
 		GamePlaye();
-	}
+	}//end_if, gameplay
 
 	//if player no play, end fishing
 	if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
-
 		player_click_count_TimeOver = 0;
 		playerGoplay_TimeOver = false;
-		app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
 		//Close dialogo
 		dialogoClose(0);
+		//Crear new dialogo
+		app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
 		fishingOver();
-
-	}
+	}//end_if, player no play, end fishing
 
 	if (playerGoplay == false) {
 		if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN) {
@@ -326,18 +329,19 @@ void RodSystem::playLureFishing()
 					fishingfloat_getPlayerPosition = true;
 					lureFinishLine = true;
 					fishingOver();
-				}
+				}//end_if, end fishing
 				castingline(fishing.fishingtype);
 			}
 			else {
 				floatChangeDistance -= 100;
-			}
-		}
-	}
+			}//end_if, end fishing or continue fishing based on distance
+		}//end_if, press "V" key
+	}//end_if, if the player catches a fish, they cannot draw another prize
 }
 
 void RodSystem::fishing_line(Direction direction, float cheke_x, float cheke_y)
 {
+	//Lure fishing, confirm direction, reel in
 	if (direction == Direction::UP) {
 		if (cheke_y <= fishingflota_position_y) {
 			b2Vec2 force(0.0f, 10.0f);
@@ -393,8 +397,64 @@ void RodSystem::fishing_line(Direction direction, float cheke_x, float cheke_y)
 
 }
 
+void RodSystem::floatCollision(Direction direction, float cheke_x, float cheke_y)
+{
+	//Confirm direction, cast the float
+	if (direction == Direction::UP) {
+		if (cheke_y >= fishingflota_position_y) {
+			b2Vec2 force(0.0f, -10.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
+	}
+	else if (direction == Direction::DOWN) {
+		if (cheke_y <= fishingflota_position_y) {
+			b2Vec2 force(0.0f, 10.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
+	}
+	else if (direction == Direction::LEFT) {
+		if (cheke_x >= fishingflota_position_x) {
+			b2Vec2 force(-10.0f, 0.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
+	}
+	else if (direction == Direction::RIGHT) {
+		if (cheke_x <= fishingflota_position_x) {
+			b2Vec2 force(10.0f, 0.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
+	}
+	else {
+		if (cheke_y <= fishingflota_position_y) {
+			b2Vec2 force(0.0f, 10.0f);
+			floatbody->body->ApplyForceToCenter(force, true);
+		}
+		else {
+			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
+	}
+}
+
 void RodSystem::dialogoClose(int time)
 {
+	//Close dialogo
 	dialogoTimeCount = time;
 	dialogoautoclose = true;
 	app->dialogManager->autoNextTime_TimerDown.Start();
@@ -423,8 +483,9 @@ void RodSystem::hooked(int player_click_count)
 	else if (player_click_count > 50) {
 
 		changeProbability(0.0, 0.0, 0.0, 0.0, 1.0);
-	}
+	}//end_if, use different probabilities based on the player
 
+	//lottery machine
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<double> dis(0.0, 1.0);
@@ -442,7 +503,7 @@ void RodSystem::hooked(int player_click_count)
 
 	for (const auto& prize : fish) {
 		printf("\n%f", prize.second);
-	}
+	}// print probabilities
 
 
 
@@ -454,14 +515,12 @@ void RodSystem::hooked(int player_click_count)
 	case Fishlevel::MEDIUM:  fishName = "MEDIUM"; break;
 	case Fishlevel::BIG:fishName = "BIG"; break;
 	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
-	}
+	}//Reaction upon knowing what is obtained
 
 	std::string strNumber = std::to_string(player_click_count);
 
-	dialogoTimeCount = 0;
-	dialogoautoclose = true;
+	dialogoClose(0);
 	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "jiajie");
-	app->dialogManager->autoNextTime_TimerDown.Start();
 	fishingOver();
 	resetProbability();
 }
@@ -470,20 +529,20 @@ void RodSystem::GamePlaye()
 {
 	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(gamePlayTime);
 
-	//printf("\n%d", (int)gamePlayTimeLimit_show);
 	if ((float)gamePlayTimeLimit_show == 0) {
-		printf("\nTimeStop, you get click %d veces", player_click_count);
+		printf("\nTimeStop, you get click %d times", player_click_count);
 		playerGoplay = false;
 		playerGoplay_TimeOver = true;
 		player_click_count_TimeOver = player_click_count;
 		if (player_click_count_TimeOver != 0) {
 			hooked(player_click_count);
-		}
+		}//end_if, if player click not 0
 		player_click_count = 0;
-	}
+	}//end_if, if gameplaytime over
 }
 
 void RodSystem::resetProbability() {
+	//if the probability is changed, it will reset here.
 	nothing_probability = 0.4;
 	trash_probability = 0.3;
 	small_probability = 0.15;
@@ -500,6 +559,7 @@ void RodSystem::resetProbability() {
 
 void RodSystem::changeProbability(double nothing, double trash, double small, double medium, double big)
 {
+	//The probability is changed here
 	nothing_probability = nothing;
 	trash_probability = trash;
 	small_probability = small;
@@ -513,61 +573,8 @@ void RodSystem::changeProbability(double nothing, double trash, double small, do
 	fish[Fishlevel::BIG] = big_probability;
 }
 
-void RodSystem::floatCollision(Direction direction, float cheke_x, float cheke_y)
-{
-	if (direction == Direction::UP) {
-		if (cheke_y >= fishingflota_position_y) {
-			b2Vec2 force(0.0f, -10.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
-	}
-	else if (direction == Direction::DOWN) {
-		if (cheke_y <= fishingflota_position_y) {
-			b2Vec2 force(0.0f, 10.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
-	}
-	else if (direction == Direction::LEFT) {
-		if (cheke_x >= fishingflota_position_x) {
-			b2Vec2 force(-10.0f, 0.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
-	}
-	else if (direction == Direction::RIGHT) {
-		if (cheke_x <= fishingflota_position_x) {
-			b2Vec2 force(10.0f, 0.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
-	}
-	else {
-		if (cheke_y <= fishingflota_position_y) {
-			b2Vec2 force(0.0f, 10.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
-	}
-}
-
 int RodSystem::getRandomNumber(int min, int max) {
+	//random number generator
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dis(min, max);
@@ -576,6 +583,7 @@ int RodSystem::getRandomNumber(int min, int max) {
 
 bool RodSystem::check_isFishCaught()
 {
+	//Lure Fishing, whether the lottery results in catching a fish
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<double> dis(0.0, 1.0);
@@ -594,36 +602,32 @@ bool RodSystem::check_isFishCaught()
 
 void RodSystem::fishingOver()
 {
-	printf("\nplayermove: %d", app->scene->GetPlayer()->playermove);
+	//if fishing ends
 	if (app->scene->GetPlayer()->playermove == false && lureFinishLine == false) {
 		fishingEndCloseDialogo = true;
-	}
+	}//end_if, close dialogo if is last
 
 	lureFinishLine = false;
 	fishing.isFishing = false;
 	fishing.startFishing = false;
 	if (!fishing.isFishing) {
 		fishingfloat_getPlayerPosition = true;
-	}
+	}//end if, if not fishing
 	startFinishingLine = false;
 	castingline(fishingtype);
 }
 
 void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-
-
-
 	switch (physB->ctype)
 	{
 	case ColliderType::PLAYER:
 		break;
 	case ColliderType::LAGO:
-		printf("\nLAGGGOOOOO");
-
+	
 		if (fishing.startFishing == false) {
 			app->dialogManager->CreateDialogSinEntity("fishing", "jiajie");
-		}
+		}//end_if, if the float collides with the " LAGO"collider, display the fishing dialog
 		fishing.startFishing = true;
 		dialogoPlayerMoving = true;
 		timeFishing.Start();
@@ -634,7 +638,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 		else {
 			lure_lotteryrandomNum = getRandomNumber(3, 7);
 			lureRandomTime = true;
-		}
+		}//end_if, React differently based on the different fishing rods
 		thistimehooked = true;
 		break;
 	case ColliderType::UNKNOWN:
