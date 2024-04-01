@@ -114,6 +114,7 @@ bool RodSystem::Update(float dt)
 			dialogoautoclose = true;
 			dialogoPlayerMoving = false;
 			fishingfloat_getPlayerPosition = true;
+			fkeyFinishLine = true;
 			fishingOver();
 		}
 		castingline(fishing.fishingtype);
@@ -193,8 +194,18 @@ bool RodSystem::Update(float dt)
 				lure_lotteryrandomNum = getRandomNumber(3, 7);
 				timeFishing.Start();
 				if (floatChangeDistance == 100) {
+					fishing.isFishing = false;
 					printf("finishi");
-					fishingOver();
+					if (!fishing.isFishing) {
+						dialogoTimeCount = 0;
+						dialogoautoclose = true;
+						app->dialogManager->autoNextTime_TimerDown.Start();
+						dialogoPlayerMoving = false;
+						fishingfloat_getPlayerPosition = true;
+						lureFinishLine = true;
+						fishingOver();
+					}
+					castingline(fishing.fishingtype);
 				}
 				else {
 					floatChangeDistance -= 100;
@@ -204,6 +215,7 @@ bool RodSystem::Update(float dt)
 	}
 
 	if (isEnd) {
+		printf("\nEnddd");
 		dialogoTimeCount = 2;
 		dialogoautoclose = true;
 		app->dialogManager->autoNextTime_TimerDown.Start();
@@ -575,9 +587,12 @@ bool RodSystem::check_isFishCaught()
 
 void RodSystem::fishingOver()
 {
-	if (app->scene->GetPlayer()->playermove == false) {
+	printf("\nplayermove: %d", app->scene->GetPlayer()->playermove);
+	if (app->scene->GetPlayer()->playermove == false && lureFinishLine == false && fkeyFinishLine == false) {
 		fishingEndCloseDialogo = true;
 	}
+	lureFinishLine = false;
+	fkeyFinishLine = false;
 	fishing.isFishing = false;
 	fishing.startFishing = false;
 	if (!fishing.isFishing) {
@@ -598,6 +613,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::LAGO:
 		printf("\nLAGGGOOOOO");
+
 		if (fishing.startFishing == false) {
 			app->dialogManager->CreateDialogSinEntity("fishing", "jiajie");
 		}

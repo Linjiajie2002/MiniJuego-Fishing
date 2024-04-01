@@ -118,9 +118,12 @@ void DialogManager::AutoNextDiagolo(int autoNextTime)
 	
 	if (isPlaying) {
 		if ((int)autoNextTime_show == 0) {
-			
+			printf("\n%d", app->scene->GetRod()->fishingEndCloseDialogo);
 			if (app->scene->GetRod()->fishingEndCloseDialogo == true) {
+				printf("\nfishingEndCloseDialogo: %d", app->scene->GetRod()->fishingEndCloseDialogo);
+				printf("\nEnd: %d", app->scene->GetRod()->fishingEndCloseDialogo);
 				app->scene->GetRod()->isEnd = true;
+				printf("\nEnd: %d", app->scene->GetRod()->fishingEndCloseDialogo);
 			}
 			indexText = 1;
 			dialogues.Del(dialogues.At(0));

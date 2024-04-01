@@ -85,6 +85,8 @@ public:
 	//Lure
 	bool lureRandomTime = false;
 	bool isFishCaught_result = false;
+	bool lureFinishLine = false;
+	bool fkeyFinishLine = false;
 	Timer luretimeFishing;
 	//bool selected_prize;
 
