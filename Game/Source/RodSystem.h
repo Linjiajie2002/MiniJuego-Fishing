@@ -38,6 +38,7 @@ public:
 	void castingline(FISHINGTYPE type);
 	void ani_castingline(Direction direction);
 	void playNormalFishing();
+	void playLureFishing();
 	void GamePlaye();
 	void fishingOver();
 	void hooked(int player_click_count);

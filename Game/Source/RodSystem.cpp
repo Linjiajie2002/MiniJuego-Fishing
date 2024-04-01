@@ -113,21 +113,21 @@ bool RodSystem::Update(float dt)
 			//Close dialogo
 			dialogoClose(0);
 
-			dialogoPlayerMoving = false;//
-			fishingfloat_getPlayerPosition = true;
-			lureFinishLine = true;
+			dialogoPlayerMoving = false;
+			fishingfloat_getPlayerPosition = true;//Enable acquiring player's current location
+			lureFinishLine = true;//In order to avoid repetition between the closing dialog for reeling in and the automatic dialog
 			fishingOver();
 		}//end_if for if not fishing
 
-		castingline(fishing.fishingtype);
+		castingline(fishing.fishingtype);//check if can fishing
 	}//end_if for press "F" key
 
 
 
 	//Animation float
 	if (fishingfloat_lineReady) {
-		ani_castingline(app->scene->GetPlayer()->player_Direction);
-	}
+		ani_castingline(app->scene->GetPlayer()->player_Direction);//animation and collision of the float
+	}//end_if can fishing or not
 
 
 	//if player mover, end fishing
@@ -136,86 +136,23 @@ bool RodSystem::Update(float dt)
 			//Close dialogo
 			dialogoClose(0);
 			dialogoPlayerMoving = false;
-		}
+		}//end_if, if player fishing moving, close dialogo
 		fishingOver();
-	}
+	}//end_if player moving in fishing
 
-	//printf("\nstartFishing%d", fishing.startFishing);
+
 	//GamePlaye
 	if (fishing.startFishing) {
 		if (fishing.fishingtype == FISHINGTYPE::FISHING) {
 			playNormalFishing();
 		}
 		else {
-
-			//printf("\n%d", lure_lotteryrandomNum);
-			if (timeFishing.ReadMSec() >= lure_lotteryrandomNum * 1000 && lureRandomTime == true) {
-				isFishCaught_result = check_isFishCaught();
-				printf("\nResultado: %d ", isFishCaught_result);
-				lureRandomTime = false;
-			}
-
-			if (isFishCaught_result) {
-
-				app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
-				//Close dialogo
-				dialogoClose(0);
-				isFishCaught_result = false;
-				playerGoplay = true;
-				gamePlayTime = getRandomNumber(3, 6);
-				gamePlayTimeLimit.Start();
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN && playerGoplay == true) {
-				player_click_count += 1;
-			}
-
-			if (playerGoplay == true) {
-				GamePlaye();
-			}
-
-			//if player no play, end fishing
-			if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
-
-				player_click_count_TimeOver = 0;
-				playerGoplay_TimeOver = false;
-				app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
-				//Close dialogo
-				dialogoClose(0);
-				fishingOver();
-
-			}
-
-			if (playerGoplay == false) {
-				if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN) {
-					printf("\nsorteo");
-					startFinishingLine = true;
-					lureRandomTime = true;
-					lure_lotteryrandomNum = getRandomNumber(3, 7);
-					timeFishing.Start();
-					if (floatChangeDistance == 100) {
-						fishing.isFishing = false;
-						printf("finishi");
-						if (!fishing.isFishing) {
-							//Close dialogo
-							dialogoClose(0);
-							dialogoPlayerMoving = false;
-							fishingfloat_getPlayerPosition = true;
-							lureFinishLine = true;
-							fishingOver();
-						}
-						castingline(fishing.fishingtype);
-					}
-					else {
-						floatChangeDistance -= 100;
-					}
-				}
-			}
-		}
-	}
+			playLureFishing();
+		}//end_if, fishing type
+	}//end_if, if start fishing
 
 	if (isEnd) {
-		printf("\nEnddd");
+		printf("\nEnd");
 		dialogoClose(2);
 		fishingEndCloseDialogo = false;
 		isEnd = false;
@@ -292,7 +229,6 @@ void RodSystem::ani_castingline(Direction direction)
 
 }
 
-
 void RodSystem::playNormalFishing()
 {
 	if (timeFishing.ReadMSec() >= lotteryrandomNum * 1000) {
@@ -329,6 +265,73 @@ void RodSystem::playNormalFishing()
 			app->dialogManager->autoNextTime_TimerDown.Start();
 			fishingOver();
 
+		}
+	}
+}
+
+void RodSystem::playLureFishing()
+{
+	//printf("\n%d", lure_lotteryrandomNum);
+	if (timeFishing.ReadMSec() >= lure_lotteryrandomNum * 1000 && lureRandomTime == true) {
+		isFishCaught_result = check_isFishCaught();
+		printf("\nResultado: %d ", isFishCaught_result);
+		lureRandomTime = false;
+	}
+
+	if (isFishCaught_result) {
+
+		app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
+		//Close dialogo
+		dialogoClose(0);
+		isFishCaught_result = false;
+		playerGoplay = true;
+		gamePlayTime = getRandomNumber(3, 6);
+		gamePlayTimeLimit.Start();
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN && playerGoplay == true) {
+		player_click_count += 1;
+	}
+
+	if (playerGoplay == true) {
+		GamePlaye();
+	}
+
+	//if player no play, end fishing
+	if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
+
+		player_click_count_TimeOver = 0;
+		playerGoplay_TimeOver = false;
+		app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
+		//Close dialogo
+		dialogoClose(0);
+		fishingOver();
+
+	}
+
+	if (playerGoplay == false) {
+		if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN) {
+			printf("\nsorteo");
+			startFinishingLine = true;
+			lureRandomTime = true;
+			lure_lotteryrandomNum = getRandomNumber(3, 7);
+			timeFishing.Start();
+			if (floatChangeDistance == 100) {
+				fishing.isFishing = false;
+				printf("finishi");
+				if (!fishing.isFishing) {
+					//Close dialogo
+					dialogoClose(0);
+					dialogoPlayerMoving = false;
+					fishingfloat_getPlayerPosition = true;
+					lureFinishLine = true;
+					fishingOver();
+				}
+				castingline(fishing.fishingtype);
+			}
+			else {
+				floatChangeDistance -= 100;
+			}
 		}
 	}
 }
@@ -396,7 +399,6 @@ void RodSystem::dialogoClose(int time)
 	dialogoautoclose = true;
 	app->dialogManager->autoNextTime_TimerDown.Start();
 }
-
 
 void RodSystem::hooked(int player_click_count)
 {
