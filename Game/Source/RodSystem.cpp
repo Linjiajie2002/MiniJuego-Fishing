@@ -37,8 +37,8 @@ std::map<Fishlevel, double> fish = {
 };
 
 std::map<bool, double> isFishCaught = {
-	{true, 0.5},
-	{false, 0.5},
+	{true, 0.2},
+	{false, 0.8},
 };
 
 
@@ -597,6 +597,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PLAYER:
 		break;
 	case ColliderType::LAGO:
+		printf("\nLAGGGOOOOO");
 		if (fishing.startFishing == false) {
 			app->dialogManager->CreateDialogSinEntity("fishing", "jiajie");
 		}
