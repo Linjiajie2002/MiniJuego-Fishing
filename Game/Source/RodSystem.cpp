@@ -28,13 +28,19 @@ double small_probability = 0.15;
 double medium_probability = 0.1;
 double big_probability = 0.05;
 
-std::map<Fishlevel, double> prizes = {
+std::map<Fishlevel, double> fish = {
 	{Fishlevel::NOTHING, nothing_probability},
 	{Fishlevel::TRASH, trash_probability},
 	{Fishlevel::SMALL, small_probability},
 	{Fishlevel::MEDIUM, medium_probability},
 	{Fishlevel::BIG, big_probability}
 };
+
+std::map<bool, double> isFishCaught = {
+	{true, 0.5},
+	{false, 0.5},
+};
+
 
 
 
@@ -66,6 +72,7 @@ bool RodSystem::Start() {
 bool RodSystem::Update(float dt)
 {
 	//tanca dialogo automatica
+	//printf("\ndialogo %d", dialogoautoclose);
 	if (dialogoautoclose) {
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
@@ -81,7 +88,7 @@ bool RodSystem::Update(float dt)
 			else
 			{
 				printf("LUREFISHING");
-				
+
 				lureDistanceGetRandom = true;
 				fishing.fishingtype = FISHINGTYPE::LUREFISHING;
 			}
@@ -109,7 +116,7 @@ bool RodSystem::Update(float dt)
 			fishingfloat_getPlayerPosition = true;
 			fishingOver();
 		}
-		castingline(fishingtype);
+		castingline(fishing.fishingtype);
 	}
 
 	//Animation float
@@ -138,22 +145,62 @@ bool RodSystem::Update(float dt)
 			playNormalFishing();
 		}
 		else {
+
+			//printf("\n%d", lure_lotteryrandomNum);
+			if (timeFishing.ReadMSec() >= lure_lotteryrandomNum * 1000 && lureRandomTime == true) {
+				isFishCaught_result = check_isFishCaught();
+				printf("\nResultado: %d ", isFishCaught_result);
+				lureRandomTime = false;
+			}
+
+			if (isFishCaught_result) {
+				dialogoTimeCount = 0;
+				dialogoautoclose = true;
+				app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
+				app->dialogManager->autoNextTime_TimerDown.Start();
+				isFishCaught_result = false;
+				playerGoplay = true;
+				gamePlayTime = getRandomNumber(3, 6);
+				gamePlayTimeLimit.Start();
+			}
+
+			if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN && playerGoplay == true) {
+				player_click_count += 1;
+			}
+
+			if (playerGoplay == true) {
+				GamePlaye();
+			}
+
+			//if player no play, end fishing
+			if (playerGoplay_TimeOver && player_click_count_TimeOver == 0) {
+
+				player_click_count_TimeOver = 0;
+				playerGoplay_TimeOver = false;
+				dialogoTimeCount = 0;
+				dialogoautoclose = true;
+				app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
+				app->dialogManager->autoNextTime_TimerDown.Start();
+				fishingOver();
+
+			}
+
+
 			if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN) {
-				printf("entra");
+				printf("\nsorteo");
 				startFinishingLine = true;
+				lureRandomTime = true;
+				lure_lotteryrandomNum = getRandomNumber(3, 7);
+				timeFishing.Start();
 				if (floatChangeDistance == 100) {
 					printf("finishi");
 					fishingOver();
-				} else {
+				}
+				else {
 					floatChangeDistance -= 100;
 				}
 			}
-
 		}
-
-
-
-
 	}
 
 	if (isEnd) {
@@ -258,7 +305,7 @@ void RodSystem::playNormalFishing()
 			player_click_count += 1;
 		}
 		if (playerGoplay == true) {
-			GamePlaye(selected_prize);
+			GamePlaye();
 		}
 
 		//if player no play, end fishing
@@ -365,22 +412,22 @@ void RodSystem::hooked(int player_click_count)
 	double random_number = dis(gen);
 
 	double cumulative_probability = 0.0;
-	selected_prize;
-	for (const auto& prize : prizes) {
-		cumulative_probability += prize.second;
+	selected_fish;
+	for (const auto& check : fish) {
+		cumulative_probability += check.second;
 		if (random_number <= cumulative_probability) {
-			selected_prize = prize.first;
+			selected_fish = check.first;
 			break;
 		}
 	}
 
-	for (const auto& prize : prizes) {
+	for (const auto& prize : fish) {
 		printf("\n%f", prize.second);
 	}
 
 
 
-	switch (selected_prize)
+	switch (selected_fish)
 	{
 	case Fishlevel::NOTHING: fishName = "NOTHING"; break;
 	case Fishlevel::TRASH: fishName = "TRASH"; break;
@@ -400,7 +447,7 @@ void RodSystem::hooked(int player_click_count)
 	resetProbability();
 }
 
-void RodSystem::GamePlaye(Fishlevel fishleve)
+void RodSystem::GamePlaye()
 {
 	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(gamePlayTime);
 
@@ -424,11 +471,11 @@ void RodSystem::resetProbability() {
 	medium_probability = 0.1;
 	big_probability = 0.05;
 
-	prizes[Fishlevel::NOTHING] = nothing_probability;
-	prizes[Fishlevel::TRASH] = trash_probability;
-	prizes[Fishlevel::SMALL] = small_probability;
-	prizes[Fishlevel::MEDIUM] = medium_probability;
-	prizes[Fishlevel::BIG] = big_probability;
+	fish[Fishlevel::NOTHING] = nothing_probability;
+	fish[Fishlevel::TRASH] = trash_probability;
+	fish[Fishlevel::SMALL] = small_probability;
+	fish[Fishlevel::MEDIUM] = medium_probability;
+	fish[Fishlevel::BIG] = big_probability;
 
 }
 
@@ -440,11 +487,11 @@ void RodSystem::changeProbability(double nothing, double trash, double small, do
 	medium_probability = medium;
 	big_probability = big;
 
-	prizes[Fishlevel::NOTHING] = nothing_probability;
-	prizes[Fishlevel::TRASH] = trash_probability;
-	prizes[Fishlevel::SMALL] = small_probability;
-	prizes[Fishlevel::MEDIUM] = medium_probability;
-	prizes[Fishlevel::BIG] = big_probability;
+	fish[Fishlevel::NOTHING] = nothing_probability;
+	fish[Fishlevel::TRASH] = trash_probability;
+	fish[Fishlevel::SMALL] = small_probability;
+	fish[Fishlevel::MEDIUM] = medium_probability;
+	fish[Fishlevel::BIG] = big_probability;
 }
 
 void RodSystem::floatCollision(Direction direction, float cheke_x, float cheke_y)
@@ -508,6 +555,24 @@ int RodSystem::getRandomNumber(int min, int max) {
 	return dis(gen);
 }
 
+bool RodSystem::check_isFishCaught()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<double> dis(0.0, 1.0);
+	double random_number = dis(gen);
+
+	double cumulative_probability = 0.0;
+
+	for (const auto& cheke : isFishCaught) {
+		cumulative_probability += cheke.second;
+		if (random_number <= cumulative_probability) {
+			return cheke.first;
+			break;
+		}
+	}
+}
+
 void RodSystem::fishingOver()
 {
 	if (app->scene->GetPlayer()->playermove == false) {
@@ -532,13 +597,21 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PLAYER:
 		break;
 	case ColliderType::LAGO:
+		if (fishing.startFishing == false) {
+			app->dialogManager->CreateDialogSinEntity("fishing", "jiajie");
+		}
 		fishing.startFishing = true;
 		dialogoPlayerMoving = true;
 		timeFishing.Start();
-		lotteryrandomNum = getRandomNumber(2, 4);
-		thistimehooked = true;
 
-		app->dialogManager->CreateDialogSinEntity("fishing", "jiajie");
+		if (fishing.fishingtype == FISHINGTYPE::FISHING) {
+			lotteryrandomNum = getRandomNumber(2, 4);
+		}
+		else {
+			lure_lotteryrandomNum = getRandomNumber(3, 7);
+			lureRandomTime = true;
+		}
+		thistimehooked = true;
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

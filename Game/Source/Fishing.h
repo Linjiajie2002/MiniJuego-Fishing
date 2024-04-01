@@ -24,6 +24,7 @@ enum class Rodlevel
 	ADVANCED
 };
 
+
 enum class FISHINGTYPE
 {
 	FISHING,

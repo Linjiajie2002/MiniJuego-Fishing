@@ -36,7 +36,7 @@ public:
 	void castingline(FISHINGTYPE type);
 	void ani_castingline(Direction direction);
 	void playNormalFishing();
-	void GamePlaye(Fishlevel fishleve);
+	void GamePlaye();
 	void fishingOver();
 	void hooked(int player_click_count);
 	void resetProbability();
@@ -44,6 +44,7 @@ public:
 	void floatCollision(Direction direction,float cheke_x, float cheke_y);
 	void fishing_line(Direction direction, float cheke_x, float cheke_y);
 	int getRandomNumber(int min, int max);
+	bool check_isFishCaught();
 
 public:
 
@@ -81,18 +82,24 @@ public:
 	bool startFinishingLine = false;
 	bool lureDistanceGetRandom;
 
-	//fishingType
-	FISHINGTYPE fishingtype;
+	//Lure
+	bool lureRandomTime = false;
+	bool isFishCaught_result = false;
+	Timer luretimeFishing;
+	//bool selected_prize;
 
+	//fishingtype
+	FISHINGTYPE fishingtype;
 
 	//StartFishing
 	Timer timeFishing;
 	int lotteryrandomNum;
+	int lure_lotteryrandomNum;
 	bool thistimehooked = true;
 	bool ishooked = false;
 	bool playerGoplay = false;
 	bool playerGoplay_TimeOver = false;
-	Fishlevel selected_prize;
+	Fishlevel selected_fish;
 	std::string fishName;
 	
 
@@ -108,9 +115,7 @@ public:
 	bool fishingEndCloseDialogo = false;
 	bool isEnd = false;
 	int gamePlayTime;
-
-	//gailv
 	
 };
-#endif // __ITEM_H__#pragma once
+#endif 
 #pragma once
