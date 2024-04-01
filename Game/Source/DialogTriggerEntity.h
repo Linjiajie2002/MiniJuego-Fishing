@@ -62,6 +62,7 @@ private:
 	//ya se a activado minimo una vez
 	bool repeatDialog = false;
 	bool played = false;
+	const char* npcName;
 
 	//Lista de dialogos a repetir
 	List<Dialog*> dialoguesRepeat;

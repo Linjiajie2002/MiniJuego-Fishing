@@ -1,87 +1,89 @@
 <!-- Config file for the game -->
 <!-- L01: DONE 1: Create configuration file-->
 <config>
-  <app>
-    <title>My video game</title>
-    <maxFrameDuration value="16"/>
-  </app>
+	<app>
+		<title>My video game</title>
+		<maxFrameDuration value="16"/>
+	</app>
 
-  <renderer>
-    <vsync value="false"/>
-	  <fonts>
-		  <primary_font fontPath="Assets/Fonts/arial.ttf" fontSize="25"/>
-		  <secondary_font fontPath="Assets/Fonts/birds_of_paradise.ttf" fontSize="25"/>
-	  </fonts>
-  </renderer>
+	<renderer>
+		<vsync value="false"/>
+		<fonts>
+			<primary_font fontPath="Assets/Fonts/arial.ttf" fontSize="25"/>
+			<secondary_font fontPath="Assets/Fonts/birds_of_paradise.ttf" fontSize="25"/>
+		</fonts>
+	</renderer>
 
-  <window>
-    <resolution width="1280" height="768" scale="1"/>
-    <fullscreen value="false"/>
-    <borderless value="false"/>
-    <resizable value="false"/>
-    <fullscreen_window value="false"/>
-  </window>
+	<window>
+		<resolution width="1280" height="768" scale="1"/>
+		<fullscreen value="false"/>
+		<borderless value="false"/>
+		<resizable value="false"/>
+		<fullscreen_window value="false"/>
+	</window>
 
-  <scene>
-    <player x="150" y="672" Tsprite="16" Pweight="192" ani_x="48" ani_y="48" texturepath="Assets\Textures\rubbit.png"/>
+	<scene>
+		<player x="150" y="672" Tsprite="16" Pweight="192" ani_x="48" ani_y="48" texturepath="Assets\Textures\rubbit.png"/>
 
-	  <map path="Assets/Maps/" name="MapTemplate.tmx"/>
-    <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
-    <item x="416" y="512" texturepath="Assets/Textures/goldCoin.png"/>
-    <item x="384" y="352" texturepath="Assets/Textures/goldCoin.png"/>
-    <item x="200" y="672" texturepath="Assets/Textures/goldCoin.png"/>
-    <item x="500" y="672" texturepath="Assets/Textures/goldCoin.png"/>
-
-
+		<map path="Assets/Maps/" name="MapTemplate.tmx"/>
+		<item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
+		<item x="416" y="512" texturepath="Assets/Textures/goldCoin.png"/>
+		<item x="384" y="352" texturepath="Assets/Textures/goldCoin.png"/>
+		<item x="200" y="672" texturepath="Assets/Textures/goldCoin.png"/>
+		<item x="500" y="672" texturepath="Assets/Textures/goldCoin.png"/>
 
 
-	  <dialogTrigger x="500" y="350" texturepath="Assets/Textures/player2.png"  facetexturepath="Assets/Textures/player2_face.png" name="El gracioso" repeat="true">
-		  <sentences>
-			  <sentence text="bararsaerar"/>
-		  </sentences>
-		  <repeat_sentences>
-			  <sentence text="Se me ha acabado el repertorio de chistes, vuelve en otro momento..."/>
-		  </repeat_sentences>
-		  
-		  
-		  
-	  </dialogTrigger>
-	  
-	  
-	  
-	  <rodsystem>
-		  <fishingfloat texturepath="Assets/Textures/fishingfloat.png" />
-	  </rodsystem>
-
-  </scene>
-
-  <dialogmanager>
-	  <textures>
-		  <background_dialog texturepath="Assets/Textures/background_textbox.png"/>
-	  </textures>
-  </dialogmanager>
 
 
-  <fishingmanager>
-	  <fishlevel>
-		  <trashes>
-			  <trash></trash>
-		  </trashes>
-		  <smalls>
-			  <small></small>
-		  </smalls>
-		  <mediums>
-			  <medium></medium>
-		  </mediums>
-		  <bigs>
-			  <big></big>
-		  </bigs>
-	  </fishlevel>
+		<dialogTrigger x="500" y="350" texturepath="Assets/Textures/player2.png"  facetexturepath="Assets/Textures/player2_face.png" name="FishingMaster" repeat="true">
+			<sentences>
+				<sentence text="¡Oh, hijo! ¿Quieres pescar? Entonces te regalaré mis dos cañas de pescar heredadas."/>
+				<sentence text="¡Esta es una caña común. Solo tienes que lanzarla y, después de un rato, obtendrás algo. [Jugabilidad: Cuando se indique, presiona la tecla 'E' continuamente. Después de cierto tiempo, cuanto más veces presiones, mayor será la probabilidad de atrapar un pez grande.]"/>
+				<sentence text="Esta es una caña de lure. Su alcance es mayor que el de una caña común. Necesitarás recoger el señuelo imitando los movimientos de un pez pequeño para atraer a los depredadores. [Jugabilidad: Lanza la caña, espera un tiempo. Durante este tiempo, es posible que pesques o no. Si no lo haces, debes recoger el señuelo un poco hasta que pesques o la pesca termine. Si pescas, aparecerá una indicación. Presiona la tecla 'E' continuamente durante un tiempo determinado. Cuantas más veces presiones, mayor será la probabilidad de atrapar un pez grande.]"/>
+			</sentences>
+			<repeat_sentences>
+				<sentence text="La vida es como pescar, la espera es una creencia, la cosecha es una satisfacción. ¡Ve a pescar, hijo!"/>
+			</repeat_sentences>
 
-  </fishingmanager>
-	
-	
-	
+
+
+		</dialogTrigger>
+
+
+
+		<rodsystem>
+			<fishingfloat texturepath="Assets/Textures/fishingfloat.png" />
+		</rodsystem>
+
+	</scene>
+
+	<dialogmanager>
+		<textures>
+			<background_dialog texturepath="Assets/Textures/background_textbox.png"/>
+		</textures>
+	</dialogmanager>
+
+
+	<fishingmanager>
+		<fishlevel>
+			<trashes>
+				<trash></trash>
+			</trashes>
+			<smalls>
+				<small></small>
+			</smalls>
+			<mediums>
+				<medium></medium>
+			</mediums>
+			<bigs>
+				<big></big>
+			</bigs>
+		</fishlevel>
+
+	</fishingmanager>
+
+
+
 	<Animations>
 		<player>
 			<idle_U start="4" end="5" speed="0.2f" loop="true"/>
@@ -100,8 +102,8 @@
 			<trash1 start="4" end="5" speed="0.2f" loop="true"/>
 			<trash1 start="4" end="5" speed="0.2f" loop="true"/>
 		</fishing>
-		
-		
+
+
 	</Animations>
 
-	</config>
+</config>

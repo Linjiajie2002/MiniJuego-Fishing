@@ -232,7 +232,7 @@ bool Map::Load(SString mapFileName)
 		}
 
 
-		PhysBody* c1 = app->physics->CreateRectangle(20 * 32 + 175, 7 * 32 + 164, 30 * 32 + 10, 30 * 32 + 5, STATIC);
+		PhysBody* c1 = app->physics->CreateRectangle(35 * 32 + 175, 5 * 32 + 140, 40 * 32 + 10, 19 * 32 - 10, STATIC);
 		c1->ctype = ColliderType::LAGO;
 
 		/* PhysBody* c2 = app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);

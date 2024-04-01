@@ -77,8 +77,14 @@ bool RodSystem::Update(float dt)
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
 
+	if (fishing.playerGetRod && !fishing.isFishing) {
+		if (app->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			fishing.rodReady = !fishing.rodReady;
+		}
+	}//end_if, equip or stow the fishing rod
+
 	//Change Rod
-	if (!fishing.isFishing) {
+	if (!fishing.isFishing && fishing.rodReady) {
 		if (app->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) {
 			if (fishing.fishingtype == FISHINGTYPE::LUREFISHING) {
 				printf("\nRod:FISHING");

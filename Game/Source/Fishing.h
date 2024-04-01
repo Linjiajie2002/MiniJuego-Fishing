@@ -38,7 +38,8 @@ public:
 	Rodlevel rodlevel;
 	FISHINGTYPE fishingtype = FISHINGTYPE::FISHING;
 
-	bool rodReady = true;
+	bool rodReady = false;
+	bool playerGetRod = false;
 	bool isFishing = false;
 	bool startFishing = false;
 
