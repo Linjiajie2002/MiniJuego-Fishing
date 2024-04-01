@@ -35,7 +35,6 @@ public:
 public:
 	void castingline(FISHINGTYPE type);
 	void ani_castingline(Direction direction);
-	void ani_castingline_lure(Direction direction);
 	void playNormalFishing();
 	void GamePlaye(Fishlevel fishleve);
 	void fishingOver();
@@ -77,8 +76,10 @@ public:
 	bool crearfloatbody = false;
 	PhysBody* floatbody = nullptr;
 	float floatDistance;
-	float floatChangeDistance = 300;
+	float lureDistance;
+	float floatChangeDistance = 100;
 	bool startFinishingLine = false;
+	bool lureDistanceGetRandom;
 
 	//fishingType
 	FISHINGTYPE fishingtype;

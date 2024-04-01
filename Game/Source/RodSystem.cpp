@@ -57,8 +57,8 @@ bool RodSystem::Awake() {
 bool RodSystem::Start() {
 
 	fishingfloat_texture = app->tex->Load(fishingfloat_path);
-
-
+	fishing.fishingtype = FISHINGTYPE::FISHING;
+	floatChangeDistance = 100;
 
 	return true;
 }
@@ -70,24 +70,36 @@ bool RodSystem::Update(float dt)
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
 
+	//CambiarRod
 	if (!fishing.isFishing) {
 		if (app->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) {
-			if (fishing.fishingtype == FISHINGTYPE::FISHING) {
-				printf("LUREFISHING");
-				fishing.fishingtype = FISHINGTYPE::LUREFISHING;
+			if (fishing.fishingtype == FISHINGTYPE::LUREFISHING) {
+				printf("FISHING");
+				fishing.fishingtype = FISHINGTYPE::FISHING;
+				lureDistanceGetRandom = false;
 			}
 			else
 			{
-				fishing.fishingtype = FISHINGTYPE::FISHING;
-				printf("FISHING");
+				printf("LUREFISHING");
+				
+				lureDistanceGetRandom = true;
+				fishing.fishingtype = FISHINGTYPE::LUREFISHING;
 			}
 		}
 	}
+
 
 	//StartFishing
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		fishing.isFishing = !fishing.isFishing;
 		isFishingta = fishing.isFishing;
+		if (lureDistanceGetRandom) {
+			lureDistance = getRandomNumber(3, 6);
+			floatChangeDistance = lureDistance * 100;
+		}
+		else {
+			floatChangeDistance = 100;
+		}
 		//Cancelar
 		if (!fishing.isFishing) {
 			app->dialogManager->autoNextTime_TimerDown.Start();
@@ -102,13 +114,7 @@ bool RodSystem::Update(float dt)
 
 	//Animation float
 	if (fishingfloat_lineReady) {
-		if (fishing.fishingtype == FISHINGTYPE::FISHING) {
-			ani_castingline(app->scene->GetPlayer()->player_Direction);
-		}
-		else {
-			ani_castingline_lure(app->scene->GetPlayer()->player_Direction);
-		}
-		
+		ani_castingline(app->scene->GetPlayer()->player_Direction);
 	}
 
 
@@ -133,15 +139,19 @@ bool RodSystem::Update(float dt)
 		}
 		else {
 			if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN) {
-				
+				printf("entra");
 				startFinishingLine = true;
-				floatChangeDistance -= 100;
-
+				if (floatChangeDistance == 100) {
+					printf("finishi");
+					fishingOver();
+				} else {
+					floatChangeDistance -= 100;
+				}
 			}
 
 		}
 
-		
+
 
 
 	}
@@ -190,97 +200,6 @@ void RodSystem::ani_castingline(Direction direction)
 		fishingfloat_getPlayerPosition = false;
 	}
 
-	floatDistance = 100;
-
-	if (direction == Direction::UP) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y - floatDistance; }
-	else if (direction == Direction::DOWN) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + floatDistance; }
-	else if (direction == Direction::LEFT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x - floatDistance; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
-	else if (direction == Direction::RIGHT) { fishingflota_CenterX = app->scene->GetPlayer()->position.x + floatDistance; fishingflota_CenterY = app->scene->GetPlayer()->position.y; }
-	else { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y + floatDistance; }
-
-	if (floatbody == nullptr && crearfloatbody) {
-		floatbody = app->physics->CreateRectangleSensor(app->scene->GetPlayer()->position.x, app->scene->GetPlayer()->position.y, 20, 20, bodyType::DYNAMIC);
-		floatbody->ctype = ColliderType::FLOAT;
-		floatbody->body->SetFixedRotation(true);
-		floatbody->listener = this;
-		crearfloatbody = false;
-
-	}
-
-	float timeLerp = 0.1f;
-	fishingflota_position_x = fishingflota_position_x * (1 - timeLerp) + fishingflota_CenterX * timeLerp;
-	fishingflota_position_y = fishingflota_position_y * (1 - timeLerp) + fishingflota_CenterY * timeLerp;
-
-
-	float cheke_x = (METERS_TO_PIXELS(floatbody->body->GetPosition().x) - texH / 2) - 23;
-	float cheke_y = (METERS_TO_PIXELS(floatbody->body->GetPosition().y) - texH / 2) - 23;
-
-
-	if (direction == Direction::UP) {
-		if (cheke_y >= fishingflota_position_y) {
-			b2Vec2 force(0.0f, -10.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
-	}
-	else if (direction == Direction::DOWN) {
-		if (cheke_y <= fishingflota_position_y) {
-			b2Vec2 force(0.0f, 10.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
-	}
-	else if (direction == Direction::LEFT) {
-		if (cheke_x >= fishingflota_position_x) {
-			b2Vec2 force(-10.0f, 0.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
-	}
-	else if (direction == Direction::RIGHT) {
-		if (cheke_x <= fishingflota_position_x) {
-			b2Vec2 force(10.0f, 0.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x, fishingflota_position_y - 23, 3);
-	}
-	else {
-		if (cheke_y <= fishingflota_position_y) {
-			b2Vec2 force(0.0f, 10.0f);
-			floatbody->body->ApplyForceToCenter(force, true);
-		}
-		else {
-			floatbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		}
-		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
-	}
-
-
-}
-
-
-void RodSystem::ani_castingline_lure(Direction direction)
-{
-	
-	//obtener position de player
-	if (fishingfloat_getPlayerPosition) {
-		fishingflota_position_x = app->scene->GetPlayer()->position.x;
-		fishingflota_position_y = app->scene->GetPlayer()->position.y;
-		fishingfloat_getPlayerPosition = false;
-	}
-
 	floatDistance = floatChangeDistance;
 
 	if (direction == Direction::UP) { fishingflota_CenterX = app->scene->GetPlayer()->position.x; fishingflota_CenterY = app->scene->GetPlayer()->position.y - floatDistance; }
@@ -306,18 +225,16 @@ void RodSystem::ani_castingline_lure(Direction direction)
 	float cheke_x = (METERS_TO_PIXELS(floatbody->body->GetPosition().x) - texH / 2) - 23;
 	float cheke_y = (METERS_TO_PIXELS(floatbody->body->GetPosition().y) - texH / 2) - 23;
 
-	
 	if (startFinishingLine) {
 		fishing_line(direction, cheke_x, cheke_y);
 	}
 	else {
 		floatCollision(direction, cheke_x, cheke_y);
 	}
-	
-	
 
 
 }
+
 
 void RodSystem::playNormalFishing()
 {
@@ -411,7 +328,7 @@ void RodSystem::fishing_line(Direction direction, float cheke_x, float cheke_y)
 		}
 		app->render->DrawTexture(fishingfloat_texture, fishingflota_position_x - 23, fishingflota_position_y, 3);
 	}
-	
+
 
 
 }
@@ -601,6 +518,7 @@ void RodSystem::fishingOver()
 	if (!fishing.isFishing) {
 		fishingfloat_getPlayerPosition = true;
 	}
+	startFinishingLine = false;
 	castingline(fishingtype);
 }
 

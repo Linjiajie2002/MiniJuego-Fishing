@@ -35,7 +35,7 @@ class Fishing
 public:
 	Fishlevel fishlever;
 	Rodlevel rodlevel;
-	FISHINGTYPE fishingtype;
+	FISHINGTYPE fishingtype = FISHINGTYPE::FISHING;
 
 	bool rodReady = true;
 	bool isFishing = false;
