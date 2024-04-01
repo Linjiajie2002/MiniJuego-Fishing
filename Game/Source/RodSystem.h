@@ -13,6 +13,8 @@
 
 struct SDL_Texture;
 
+
+
 class RodSystem : public Entity
 {
 public:
@@ -43,8 +45,8 @@ public:
 	void changeProbability(double nothing, double trash, double small, double medium, double big);
 	void floatCollision(Direction direction,float cheke_x, float cheke_y);
 	void fishing_line(Direction direction, float cheke_x, float cheke_y);
-	int getRandomNumber(int min, int max);
 	bool check_isFishCaught();
+	int getRandomNumber(int min, int max);
 
 public:
 

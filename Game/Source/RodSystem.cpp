@@ -22,12 +22,14 @@
 #include <map>
 #include <random>
 
+//base of the probability of catching fish
 double nothing_probability = 0.4;
 double trash_probability = 0.3;
 double small_probability = 0.15;
 double medium_probability = 0.1;
 double big_probability = 0.05;
 
+//probability machine for each type of fish
 std::map<Fishlevel, double> fish = {
 	{Fishlevel::NOTHING, nothing_probability},
 	{Fishlevel::TRASH, trash_probability},
@@ -36,12 +38,11 @@ std::map<Fishlevel, double> fish = {
 	{Fishlevel::BIG, big_probability}
 };
 
+//probability machine for lure fishing
 std::map<bool, double> isFishCaught = {
 	{true, 0.2},
 	{false, 0.8},
 };
-
-
 
 
 RodSystem::RodSystem() : Entity(EntityType::ROD)
@@ -53,7 +54,6 @@ RodSystem::RodSystem() : Entity(EntityType::ROD)
 RodSystem::~RodSystem() {}
 
 bool RodSystem::Awake() {
-
 
 	fishingfloat_path = parameters.child("fishingfloat").attribute("texturepath").as_string();
 
@@ -71,29 +71,28 @@ bool RodSystem::Start() {
 
 bool RodSystem::Update(float dt)
 {
-	//tanca dialogo automatica
-	//printf("\ndialogo %d", dialogoautoclose);
+
+	//Automatic dialog box closure mechanism
 	if (dialogoautoclose) {
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
 
-	//CambiarRod
+	//Change Rod
 	if (!fishing.isFishing) {
 		if (app->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) {
 			if (fishing.fishingtype == FISHINGTYPE::LUREFISHING) {
-				printf("FISHING");
+				printf("\nRod:FISHING");
 				fishing.fishingtype = FISHINGTYPE::FISHING;
-				lureDistanceGetRandom = false;
+				lureDistanceGetRandom = false;//Disable irregular distance
 			}
 			else
 			{
-				printf("LUREFISHING");
-
-				lureDistanceGetRandom = true;
+				printf("\nRod:LUREFISHING");
 				fishing.fishingtype = FISHINGTYPE::LUREFISHING;
-			}
-		}
-	}
+				lureDistanceGetRandom = true;// enable irregular distance
+			}//end_if for cheke is "LUREFISHING" o "FISHING"
+		}//end_if for press "C" key
+	}//end_if for check if fishing
 
 
 	//StartFishing
