@@ -251,7 +251,7 @@ void RodSystem::playNormalFishing()
 			//Close dialogo
 			dialogoClose(0);
 			//Crear new dialogo
-			app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "fishing System");
+			app->dialogManager->CreateDialogSinEntity("Ostia, te ha pillado algo!", "Fishing System");
 			playerGoplay = true;//Start game play
 			gamePlayTime = getRandomNumber(3, 6);// Get play time
 			gamePlayTimeLimit.Start();// reset play time
@@ -274,7 +274,7 @@ void RodSystem::playNormalFishing()
 			//Close dialogo
 			dialogoClose(0);
 			//Crear new dialogo
-			app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "fishing System");
+			app->dialogManager->CreateDialogSinEntity("Que lastima, el pez se escapo.", "Fishing System");
 			fishingOver();
 		}//end_if player no play, end fishing
 	}//end_if, if fish is caught
@@ -292,7 +292,7 @@ void RodSystem::playLureFishing()
 		//Close dialogo
 		dialogoClose(0);
 		//Crear new dialogo
-		app->dialogManager->CreateDialogSinEntity("Ostia puta a pescado", "jiajie");
+		app->dialogManager->CreateDialogSinEntity("Ostia, te ha pillado algo!", "Fishing System");
 		isFishCaught_result = false;
 		playerGoplay = true;
 		gamePlayTime = getRandomNumber(3, 6);
@@ -314,7 +314,7 @@ void RodSystem::playLureFishing()
 		//Close dialogo
 		dialogoClose(0);
 		//Crear new dialogo
-		app->dialogManager->CreateDialogSinEntity("Joder, porque no pesca", "jiajie");
+		app->dialogManager->CreateDialogSinEntity("Que lastima, el pez se escapo.", "Fishing System");
 		fishingOver();
 	}//end_if, player no play, end fishing
 
@@ -526,7 +526,7 @@ void RodSystem::hooked(int player_click_count)
 	std::string strNumber = std::to_string(player_click_count);
 
 	dialogoClose(0);
-	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "jiajie");
+	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "Fishing System");
 	fishingOver();
 	resetProbability();
 }
@@ -632,7 +632,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::LAGO:
 	
 		if (fishing.startFishing == false) {
-			app->dialogManager->CreateDialogSinEntity("fishing", "jiajie");
+			app->dialogManager->CreateDialogSinEntity("Estas pescando.", "Fishing System");
 		}//end_if, if the float collides with the " LAGO"collider, display the fishing dialog
 		fishing.startFishing = true;
 		dialogoPlayerMoving = true;
