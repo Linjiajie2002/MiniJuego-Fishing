@@ -35,6 +35,13 @@ public:
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 public:
+
+	bool miniGameStart(float dt);
+	bool miniGameLoop(float dt);
+	bool miniGameEnd(float dt);
+
+
+
 	void castingline(FISHINGTYPE type);
 	void ani_castingline(Direction direction);
 	void playNormalFishing();

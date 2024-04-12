@@ -77,101 +77,15 @@ bool RodSystem::Update(float dt)
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
 
-	if (fishing.playerGetRod && !fishing.isFishing) {
-		if (app->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
-			fishing.rodReady = !fishing.rodReady;
-		}
-	}//end_if, equip or stow the fishing rod
-
-	//Change Rod
-	if (!fishing.isFishing && fishing.rodReady) {
-		if (app->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) {
-			if (fishing.fishingtype == FISHINGTYPE::LUREFISHING) {
-				printf("\nRod:FISHING");
-				fishing.fishingtype = FISHINGTYPE::FISHING;
-				lureDistanceGetRandom = false;//Disable irregular distance
-			}
-			else
-			{
-				printf("\nRod:LUREFISHING");
-				fishing.fishingtype = FISHINGTYPE::LUREFISHING;
-				lureDistanceGetRandom = true;// enable irregular distance
-			}//end_if for cheke is "LUREFISHING" o "FISHING"
-		}//end_if for press "C" key
-	}//end_if for check if fishing
+	miniGameStart(dt);
+	miniGameLoop(dt);
+	miniGameEnd(dt);
 
 
-	//Cast the rod and StartFishing
-	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
-		fishing.isFishing = !fishing.isFishing;//Start fishing o Stop fishing
-
-		/*if (fishing.isFishing == true && fishing.startFishing == false) {
-			fishing.isFishing = true;
-		}
-		else {
-			fishing.isFishing = !fishing.isFishing;//Start fishing o Stop fishing
-		}*///can fix the bug where collision does not reach the lago area, but it's not perfect
-		
-		isFishingta = fishing.isFishing;//Save data to "isFishingta"
-		if (lureDistanceGetRandom) {
-			lureDistance = getRandomNumber(3, 6);
-			floatChangeDistance = lureDistance * 100;
-		}//end_if is lurefishing and get irregular distance
-		else {
-			floatChangeDistance = 100;
-		}//normal fishing distance
-
-
-		//Retrieve the rod
-		if (!fishing.isFishing) {
-			//Close dialogo
-			dialogoClose(0);
-
-			dialogoPlayerMoving = false;
-			fishingfloat_getPlayerPosition = true;//Enable acquiring player's current location
-			lureFinishLine = true;//In order to avoid repetition between the closing dialog for reeling in and the automatic dialog
-			fishingOver();
-		}//end_if for if not fishing
-
-		castingline(fishing.fishingtype);//check if can fishing
-	}//end_if for press "F" key
-
-
-
-	//Animation float
-	if (fishingfloat_lineReady) {
-		ani_castingline(app->scene->GetPlayer()->player_Direction);//animation and collision of the float
-	}//end_if can fishing or not
-
-
-	//if player mover, end fishing
-	if (app->scene->GetPlayer()->playermove) {
-		if (dialogoPlayerMoving) {
-			//Close dialogo
-			dialogoClose(0);
-			dialogoPlayerMoving = false;
-		}//end_if, if player fishing moving, close dialogo
-		fishingOver();
-	}//end_if player moving in fishing
-
-
-	//GamePlaye
-	if (fishing.startFishing) {
-		if (fishing.fishingtype == FISHINGTYPE::FISHING) {
-			playNormalFishing();
-		}
-		else {
-			playLureFishing();
-		}//end_if, fishing type
-	}//end_if, if start fishing
-
-	if (isEnd) {
-		dialogoClose(2);
-		fishingEndCloseDialogo = false;
-		isEnd = false;
-	}//end_if, close last dialogo
 	return true;
 }
+
+
 
 
 bool RodSystem::CleanUp()
@@ -651,6 +565,111 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision UNKNOWN");
 		break;
 	}
+}
+
+bool RodSystem::miniGameStart(float dt)
+{
+
+	if (fishing.playerGetRod && !fishing.isFishing) {
+		if (app->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			fishing.rodReady = !fishing.rodReady;
+		}
+	}//end_if, equip or stow the fishing rod
+	return true;
+}
+
+bool RodSystem::miniGameLoop(float dt)
+{
+	//Change Rod
+	if (!fishing.isFishing && fishing.rodReady) {
+		if (app->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) {
+			if (fishing.fishingtype == FISHINGTYPE::LUREFISHING) {
+				printf("\nRod:FISHING");
+				fishing.fishingtype = FISHINGTYPE::FISHING;
+				lureDistanceGetRandom = false;//Disable irregular distance
+			}
+			else
+			{
+				printf("\nRod:LUREFISHING");
+				fishing.fishingtype = FISHINGTYPE::LUREFISHING;
+				lureDistanceGetRandom = true;// enable irregular distance
+			}//end_if for cheke is "LUREFISHING" o "FISHING"
+		}//end_if for press "C" key
+	}//end_if for check if fishing
+
+
+	//Cast the rod and StartFishing
+	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
+		fishing.isFishing = !fishing.isFishing;//Start fishing o Stop fishing
+
+		/*if (fishing.isFishing == true && fishing.startFishing == false) {
+			fishing.isFishing = true;
+		}
+		else {
+			fishing.isFishing = !fishing.isFishing;//Start fishing o Stop fishing
+		}*///can fix the bug where collision does not reach the lago area, but it's not perfect
+
+		isFishingta = fishing.isFishing;//Save data to "isFishingta"
+		if (lureDistanceGetRandom) {
+			lureDistance = getRandomNumber(3, 6);
+			floatChangeDistance = lureDistance * 100;
+		}//end_if is lurefishing and get irregular distance
+		else {
+			floatChangeDistance = 100;
+		}//normal fishing distance
+
+
+		//Retrieve the rod
+		if (!fishing.isFishing) {
+			//Close dialogo
+			dialogoClose(0);
+
+			dialogoPlayerMoving = false;
+			fishingfloat_getPlayerPosition = true;//Enable acquiring player's current location
+			lureFinishLine = true;//In order to avoid repetition between the closing dialog for reeling in and the automatic dialog
+			fishingOver();
+		}//end_if for if not fishing
+
+		castingline(fishing.fishingtype);//check if can fishing
+	}//end_if for press "F" key
+
+	//Animation float
+	if (fishingfloat_lineReady) {
+		ani_castingline(app->scene->GetPlayer()->player_Direction);//animation and collision of the float
+	}//end_if can fishing or not
+
+	//GamePlaye
+	if (fishing.startFishing) {
+		if (fishing.fishingtype == FISHINGTYPE::FISHING) {
+			playNormalFishing();
+		}
+		else {
+			playLureFishing();
+		}//end_if, fishing type
+	}//end_if, if start fishing
+	return true;
+}
+
+bool RodSystem::miniGameEnd(float dt)
+{
+
+	//if player mover, end fishing
+	if (app->scene->GetPlayer()->playermove) {
+		if (dialogoPlayerMoving) {
+			//Close dialogo
+			dialogoClose(0);
+			dialogoPlayerMoving = false;
+		}//end_if, if player fishing moving, close dialogo
+		fishingOver();
+	}//end_if player moving in fishing
+
+	if (isEnd) {
+		dialogoClose(2);
+		fishingEndCloseDialogo = false;
+		isEnd = false;
+	}//end_if, close last dialogo
+	
+	return true;
 }
 
 
