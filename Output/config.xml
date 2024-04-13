@@ -50,6 +50,7 @@
 
 		<minigamefishing>
 			<fishingfloat texturepath="Assets/Textures/fishingfloat.png" />
+			
 			<fishlevel>
 				<nonthings>
 					<nonthing texturepath="Assets/Textures/Fishing/trash1.png" name = "nonthing" />

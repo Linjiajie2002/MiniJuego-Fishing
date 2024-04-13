@@ -669,9 +669,27 @@ void MiniGameFishing::reward_pool(Fishlevel fishingType)
 	}//Reaction upon knowing what is obtained
 
 
+	
+
 	std::string strNumber = std::to_string(player_click_count);
+
+	//for (pugi::xml_node itemNode = parameters.child("fishlevel"); itemNode; itemNode = itemNode.child("trashes").next_sibling("trash"))
+	//{
+	//	printf("\n 1");
+	//	//fishing_path = parameters.child("fishlevel").child("trashes").child("trash").attribute("texturepath").as_string();
+	//}
+	
+
+	for (pugi::xml_node itemNode = parameters.child("fishlevel").child("trashes").child("trash"); itemNode; itemNode = itemNode.next_sibling("trash"))
+	{
+		fishing_path = parameters.child("fishlevel").child("trashes").child("trash").attribute("texturepath").as_string();
+
+	}
+
+
+	printf("ss: %s", fishing_path);
 	dialogoClose(0);
-	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "Fishing System", nullptr);
+	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "Fishing System", fishing_path);
 	fishingOver();
 	resetProbability();
 }

@@ -35,6 +35,7 @@ bool Scene::Awake(pugi::xml_node config)
 	player = (Player*) app->entityManager->CreateEntity(EntityType::PLAYER);
 	//Assigns the XML node to a member in player
 	player->config = config.child("player");
+	//fishing->config = config.child("minigamefishing");
 
 	//Get the map name from the config file and assigns the value in the module
 	app->map->name = config.child("map").attribute("name").as_string();

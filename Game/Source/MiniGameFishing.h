@@ -75,6 +75,8 @@ public:
 
 	Fishing fishing;
 
+
+	const char* fishing_path;
 	//fishingfloat
 	const char* fishingfloat_path;
 	SDL_Texture* fishingfloat_texture = NULL;
