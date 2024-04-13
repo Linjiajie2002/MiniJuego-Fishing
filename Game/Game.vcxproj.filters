@@ -31,9 +31,6 @@
     <ClCompile Include="Source\DialogTriggerEntity.cpp">
       <Filter>DialogoSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\FishingManager.cpp">
-      <Filter>FishingSystem</Filter>
-    </ClCompile>
     <ClCompile Include="Source\MiniGameFishing.cpp">
       <Filter>FishingSystem</Filter>
     </ClCompile>
@@ -100,9 +97,6 @@
       <Filter>DialogoSystem</Filter>
     </ClInclude>
     <ClInclude Include="Source\Fishing.h">
-      <Filter>FishingSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\FishingManager.h">
       <Filter>FishingSystem</Filter>
     </ClInclude>
     <ClInclude Include="Source\MiniGameFishing.h">

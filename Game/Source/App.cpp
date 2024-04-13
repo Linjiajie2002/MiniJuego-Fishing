@@ -10,7 +10,6 @@
 #include "GuiManager.h"
 
 #include "DialogManager.h"
-#include "FishingManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -44,7 +43,6 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	guiManager = new GuiManager();
 
 	dialogManager = new DialogManager();
-	fishingManager = new FishingManager();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -61,7 +59,6 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(guiManager);
 
 	AddModule(dialogManager);
-	AddModule(fishingManager);
 	// Render last to swap buffer
 	AddModule(render);
 

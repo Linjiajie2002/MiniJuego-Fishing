@@ -76,12 +76,17 @@ public:
 	Fishing fishing;
 
 
-	const char* fishing_path;
+	List<const char*>chosefishing_path;
+	List<const char*>choseName_path;
+	const char*fishing_path;
+	const char*name_path;
 	//fishingfloat
 	const char* fishingfloat_path;
 	SDL_Texture* fishingfloat_texture = NULL;
 	float fishingflota_position_x;
 	float fishingflota_position_y;
+	float testX;
+	float testY;
 	float fishingflota_CenterX;
 	float fishingflota_CenterY;
 	bool fishingfloat_lineReady = false;
@@ -113,7 +118,8 @@ public:
 	bool playerGoplay = false;
 	bool playerGoplay_TimeOver = false;
 	Fishlevel selected_fish;
-	std::string fishName;
+	const char* fishLevel;
+	const char* fishName;
 	
 
 	//GamePlay

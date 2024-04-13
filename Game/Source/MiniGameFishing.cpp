@@ -15,7 +15,6 @@
 #include "Player.h"
 #include "App.h"
 #include "Fishing.h"
-#include "FishingManager.h"
 #include "DialogTriggerEntity.h"
 #include "DialogManager.h"
 #include "Dialog.h"
@@ -142,6 +141,7 @@ void MiniGameFishing::ani_castingline(Direction direction)
 	fishingflota_position_y = fishingflota_position_y * (1 - timeLerp) + fishingflota_CenterY * timeLerp;
 
 	//moving collision
+
 	float cheke_x = (METERS_TO_PIXELS(floatbody->body->GetPosition().x) - texH / 2) - 23;
 	float cheke_y = (METERS_TO_PIXELS(floatbody->body->GetPosition().y) - texH / 2) - 23;
 
@@ -660,36 +660,32 @@ void MiniGameFishing::reward_pool(Fishlevel fishingType)
 {
 	switch (fishingType)
 	{
-	case Fishlevel::NOTHING: fishName = "NOTHING"; break;
-	case Fishlevel::TRASH: fishName = "TRASH"; break;
-	case Fishlevel::SMALL:  fishName = "SMALL"; break;
-	case Fishlevel::MEDIUM:  fishName = "MEDIUM"; break;
-	case Fishlevel::BIG:fishName = "BIG"; break;
+	case Fishlevel::NOTHING: fishLevel = "nonthings", fishName = "nonthing"; break;
+	case Fishlevel::TRASH: fishLevel = "trashes", fishName = "trash"; break;
+	case Fishlevel::SMALL: fishLevel = "smalls", fishName = "small"; break;
+	case Fishlevel::MEDIUM: fishLevel = "mediums", fishName = "medium"; break;
+	case Fishlevel::BIG: fishLevel = "bigs", fishName = "big"; break;
 	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
 	}//Reaction upon knowing what is obtained
 
-
-	
-
-	std::string strNumber = std::to_string(player_click_count);
-
-	//for (pugi::xml_node itemNode = parameters.child("fishlevel"); itemNode; itemNode = itemNode.child("trashes").next_sibling("trash"))
-	//{
-	//	printf("\n 1");
-	//	//fishing_path = parameters.child("fishlevel").child("trashes").child("trash").attribute("texturepath").as_string();
-	//}
-	
-
-	for (pugi::xml_node itemNode = parameters.child("fishlevel").child("trashes").child("trash"); itemNode; itemNode = itemNode.next_sibling("trash"))
+	chosefishing_path.Clear();
+	choseName_path.Clear();
+	int numNodes = 0;
+	for (pugi::xml_node itemNode = parameters.child("fishlevel").child(fishLevel).child(fishName); itemNode; itemNode = itemNode.next_sibling(fishName))
 	{
-		fishing_path = parameters.child("fishlevel").child("trashes").child("trash").attribute("texturepath").as_string();
-
+		chosefishing_path.Add(itemNode.attribute("texturepath").as_string());
+		choseName_path.Add(itemNode.attribute("name").as_string());
+		numNodes++;
 	}
 
+	int num = 0;
+	num = getRandomNumber(0, numNodes-1);
 
-	printf("ss: %s", fishing_path);
+	fishing_path = chosefishing_path[num];
+	name_path = choseName_path[num];
+	std::string strNumber = std::to_string(player_click_count);
 	dialogoClose(0);
-	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "Fishing System", fishing_path);
+	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + name_path, "Fishing System", fishing_path);
 	fishingOver();
 	resetProbability();
 }

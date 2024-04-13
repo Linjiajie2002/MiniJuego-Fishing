@@ -9,7 +9,7 @@
 #include "Point.h"
 #include "Physics.h"
 #include "Fishing.h"
-#include "FishingManager.h"
+
 
 Player::Player() : Entity(EntityType::PLAYER)
 {

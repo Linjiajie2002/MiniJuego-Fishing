@@ -10,7 +10,6 @@
 #include "Animation.h"
 #include "DialogTriggerEntity.h"
 #include "Fishing.h"
-#include "FishingManager.h"
 struct SDL_Texture;
 
 class Player : public Entity
