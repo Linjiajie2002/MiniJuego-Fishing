@@ -5,7 +5,7 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "DialogTriggerEntity.h"
-#include "RodSystem.h"
+#include "MiniGameFishing.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -95,7 +95,7 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		entity = new DialogTrigger();
 		break;
 	case EntityType::ROD:
-		entity = new RodSystem();
+		entity = new MiniGameFishing();
 		break;
 	default:
 		break;

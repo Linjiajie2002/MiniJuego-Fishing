@@ -6,7 +6,7 @@
 #include "GuiControl.h"
 #include "GuiControlButton.h"
 #include "Player.h"
-#include "RodSystem.h"
+#include "MiniGameFishing.h"
 #include "DialogTriggerEntity.h"
 
 struct SDL_Texture;
@@ -45,7 +45,7 @@ public:
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	Player* GetPlayer();
-	RodSystem* GetRod();
+	MiniGameFishing* GetRod();
 	DialogTrigger* GetDialogTrigger();
 
 private:
@@ -64,7 +64,7 @@ private:
 
 public:
 	Player* player = new Player;
-	RodSystem* rodsystem = new RodSystem;
+	MiniGameFishing* fishing = new MiniGameFishing;
 	DialogTrigger* dialogtrigger = new DialogTrigger;
 };
 

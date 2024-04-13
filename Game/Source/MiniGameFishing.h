@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __RODSYSTEM_H__
-#define __RODSYSTEM_H__
+#ifndef __MINIGAMEFISHING_H__
+#define __MINIGAMEFISHING_H__
 
 
 #include "Entity.h"
@@ -15,14 +15,14 @@ struct SDL_Texture;
 
 
 
-class RodSystem : public Entity
+class MiniGameFishing : public Entity
 {
 public:
 
 	
 
-	RodSystem();
-	virtual ~RodSystem();
+	MiniGameFishing();
+	virtual ~MiniGameFishing();
 
 	bool Awake();
 
@@ -39,7 +39,7 @@ public:
 	bool miniGameStart(float dt);
 	bool miniGameLoop(float dt);
 	bool miniGameEnd(float dt);
-
+	void reward_pool(Fishlevel fishingType);
 
 
 	void castingline(FISHINGTYPE type);

@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "Item.h"
 #include "DialogTriggerEntity.h"
-#include "RodSystem.h"
+#include "MiniGameFishing.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -54,10 +54,10 @@ bool Scene::Awake(pugi::xml_node config)
 		dialogTrigger->parameters = itemNode;
 	}
 
-	for (pugi::xml_node itemNode = config.child("rodsystem"); itemNode; itemNode = itemNode.next_sibling("rodsystem"))
+	for (pugi::xml_node itemNode = config.child("minigamefishing"); itemNode; itemNode = itemNode.next_sibling("minigamefishing"))
 	{
-		rodsystem = (RodSystem*)app->entityManager->CreateEntity(EntityType::ROD);
-		rodsystem->parameters = itemNode;
+		fishing = (MiniGameFishing*)app->entityManager->CreateEntity(EntityType::ROD);
+		fishing->parameters = itemNode;
 	}
 
 	return ret;
@@ -158,9 +158,9 @@ Player* Scene::GetPlayer() {
 	return player;
 }
 
-RodSystem* Scene::GetRod()
+MiniGameFishing* Scene::GetRod()
 {
-	return rodsystem;
+	return fishing;
 }
 
 DialogTrigger* Scene::GetDialogTrigger()

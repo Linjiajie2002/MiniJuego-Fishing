@@ -34,7 +34,7 @@
     <ClCompile Include="Source\FishingManager.cpp">
       <Filter>FishingSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RodSystem.cpp">
+    <ClCompile Include="Source\MiniGameFishing.cpp">
       <Filter>FishingSystem</Filter>
     </ClCompile>
   </ItemGroup>
@@ -105,7 +105,7 @@
     <ClInclude Include="Source\FishingManager.h">
       <Filter>FishingSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RodSystem.h">
+    <ClInclude Include="Source\MiniGameFishing.h">
       <Filter>FishingSystem</Filter>
     </ClInclude>
   </ItemGroup>

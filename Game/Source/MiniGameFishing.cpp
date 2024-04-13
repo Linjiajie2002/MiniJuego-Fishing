@@ -10,7 +10,7 @@
 #include "Physics.h"
 #include "Timer.h"
 #include "Map.h"
-#include "RodSystem.h"
+#include "MiniGameFishing.h"
 
 #include "Player.h"
 #include "App.h"
@@ -45,22 +45,22 @@ std::map<bool, double> isFishCaught = {
 };
 
 
-RodSystem::RodSystem() : Entity(EntityType::ROD)
+MiniGameFishing::MiniGameFishing() : Entity(EntityType::ROD)
 {
-	name.Create("rodsystem");
+	name.Create("minigamefishing");
 
 }
 
-RodSystem::~RodSystem() {}
+MiniGameFishing::~MiniGameFishing() {}
 
-bool RodSystem::Awake() {
+bool MiniGameFishing::Awake() {
 
 	fishingfloat_path = parameters.child("fishingfloat").attribute("texturepath").as_string();
 
 	return true;
 }
 
-bool RodSystem::Start() {
+bool MiniGameFishing::Start() {
 
 	fishingfloat_texture = app->tex->Load(fishingfloat_path);
 	fishing.fishingtype = FISHINGTYPE::FISHING;
@@ -69,14 +69,12 @@ bool RodSystem::Start() {
 	return true;
 }
 
-bool RodSystem::Update(float dt)
+bool MiniGameFishing::Update(float dt)
 {
-
 	//Automatic dialog box closure mechanism
 	if (dialogoautoclose) {
 		app->dialogManager->AutoNextDiagolo(dialogoTimeCount);
 	}
-
 	miniGameStart(dt);
 	miniGameLoop(dt);
 	miniGameEnd(dt);
@@ -88,12 +86,12 @@ bool RodSystem::Update(float dt)
 
 
 
-bool RodSystem::CleanUp()
+bool MiniGameFishing::CleanUp()
 {
 	return true;
 }
 
-void RodSystem::castingline(FISHINGTYPE type)
+void MiniGameFishing::castingline(FISHINGTYPE type)
 {
 	if (fishing.rodReady) {
 		if (fishing.isFishing) {
@@ -110,7 +108,7 @@ void RodSystem::castingline(FISHINGTYPE type)
 	}//end_if, check if equipped with a fishing rod
 }
 
-void RodSystem::ani_castingline(Direction direction)
+void MiniGameFishing::ani_castingline(Direction direction)
 {
 	//obtener position de player
 	if (fishingfloat_getPlayerPosition) {
@@ -157,7 +155,7 @@ void RodSystem::ani_castingline(Direction direction)
 
 }
 
-void RodSystem::playNormalFishing()
+void MiniGameFishing::playNormalFishing()
 {
 	if (timeFishing.ReadMSec() >= lotteryrandomNum * 1000) {
 		if (thistimehooked) {
@@ -165,7 +163,7 @@ void RodSystem::playNormalFishing()
 			//Close dialogo
 			dialogoClose(0);
 			//Crear new dialogo
-			app->dialogManager->CreateDialogSinEntity("Ostia, te ha pillado algo!", "Fishing System");
+			app->dialogManager->CreateDialogSinEntity("Ostia, te ha pillado algo!", "Fishing System", nullptr);
 			playerGoplay = true;//Start game play
 			gamePlayTime = getRandomNumber(3, 6);// Get play time
 			gamePlayTimeLimit.Start();// reset play time
@@ -188,13 +186,13 @@ void RodSystem::playNormalFishing()
 			//Close dialogo
 			dialogoClose(0);
 			//Crear new dialogo
-			app->dialogManager->CreateDialogSinEntity("Que lastima, el pez se escapo.", "Fishing System");
+			app->dialogManager->CreateDialogSinEntity("Que lastima, el pez se escapo.", "Fishing System", nullptr);
 			fishingOver();
 		}//end_if player no play, end fishing
 	}//end_if, if fish is caught
 }
 
-void RodSystem::playLureFishing()
+void MiniGameFishing::playLureFishing()
 {
 	if (timeFishing.ReadMSec() >= lure_lotteryrandomNum * 1000 && lureRandomTime == true) {
 		isFishCaught_result = check_isFishCaught();
@@ -206,7 +204,7 @@ void RodSystem::playLureFishing()
 		//Close dialogo
 		dialogoClose(0);
 		//Crear new dialogo
-		app->dialogManager->CreateDialogSinEntity("Ostia, te ha pillado algo!", "Fishing System");
+		app->dialogManager->CreateDialogSinEntity("Ostia, te ha pillado algo!", "Fishing System", nullptr);
 		isFishCaught_result = false;
 		playerGoplay = true;
 		gamePlayTime = getRandomNumber(3, 6);
@@ -228,7 +226,7 @@ void RodSystem::playLureFishing()
 		//Close dialogo
 		dialogoClose(0);
 		//Crear new dialogo
-		app->dialogManager->CreateDialogSinEntity("Que lastima, el pez se escapo.", "Fishing System");
+		app->dialogManager->CreateDialogSinEntity("Que lastima, el pez se escapo.", "Fishing System", nullptr);
 		fishingOver();
 	}//end_if, player no play, end fishing
 
@@ -259,7 +257,7 @@ void RodSystem::playLureFishing()
 	}//end_if, if the player catches a fish, they cannot draw another prize
 }
 
-void RodSystem::fishing_line(Direction direction, float cheke_x, float cheke_y)
+void MiniGameFishing::fishing_line(Direction direction, float cheke_x, float cheke_y)
 {
 	//Lure fishing, confirm direction, reel in
 	if (direction == Direction::UP) {
@@ -317,7 +315,7 @@ void RodSystem::fishing_line(Direction direction, float cheke_x, float cheke_y)
 
 }
 
-void RodSystem::floatCollision(Direction direction, float cheke_x, float cheke_y)
+void MiniGameFishing::floatCollision(Direction direction, float cheke_x, float cheke_y)
 {
 	//Confirm direction, cast the float
 	if (direction == Direction::UP) {
@@ -372,7 +370,7 @@ void RodSystem::floatCollision(Direction direction, float cheke_x, float cheke_y
 	}
 }
 
-void RodSystem::dialogoClose(int time)
+void MiniGameFishing::dialogoClose(int time)
 {
 	//Close dialogo
 	dialogoTimeCount = time;
@@ -380,7 +378,7 @@ void RodSystem::dialogoClose(int time)
 	app->dialogManager->autoNextTime_TimerDown.Start();
 }
 
-void RodSystem::hooked(int player_click_count)
+void MiniGameFishing::hooked(int player_click_count)
 {
 
 	if (player_click_count < 10) {
@@ -426,26 +424,12 @@ void RodSystem::hooked(int player_click_count)
 	}// print probabilities
 
 
+	reward_pool(selected_fish);
 
-	switch (selected_fish)
-	{
-	case Fishlevel::NOTHING: fishName = "NOTHING"; break;
-	case Fishlevel::TRASH: fishName = "TRASH"; break;
-	case Fishlevel::SMALL:  fishName = "SMALL"; break;
-	case Fishlevel::MEDIUM:  fishName = "MEDIUM"; break;
-	case Fishlevel::BIG:fishName = "BIG"; break;
-	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
-	}//Reaction upon knowing what is obtained
-
-	std::string strNumber = std::to_string(player_click_count);
-
-	dialogoClose(0);
-	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "Fishing System");
-	fishingOver();
-	resetProbability();
+	
 }
 
-void RodSystem::GamePlaye()
+void MiniGameFishing::GamePlaye()
 {
 	gamePlayTimeLimit_show = gamePlayTimeLimit.CountDown(gamePlayTime);
 
@@ -461,7 +445,7 @@ void RodSystem::GamePlaye()
 	}//end_if, if gameplaytime over
 }
 
-void RodSystem::resetProbability() {
+void MiniGameFishing::resetProbability() {
 	//if the probability is changed, it will reset here.
 	nothing_probability = 0.4;
 	trash_probability = 0.3;
@@ -477,7 +461,7 @@ void RodSystem::resetProbability() {
 
 }
 
-void RodSystem::changeProbability(double nothing, double trash, double small, double medium, double big)
+void MiniGameFishing::changeProbability(double nothing, double trash, double small, double medium, double big)
 {
 	//The probability is changed here
 	nothing_probability = nothing;
@@ -493,7 +477,7 @@ void RodSystem::changeProbability(double nothing, double trash, double small, do
 	fish[Fishlevel::BIG] = big_probability;
 }
 
-int RodSystem::getRandomNumber(int min, int max) {
+int MiniGameFishing::getRandomNumber(int min, int max) {
 	//random number generator
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -501,7 +485,7 @@ int RodSystem::getRandomNumber(int min, int max) {
 	return dis(gen);
 }
 
-bool RodSystem::check_isFishCaught()
+bool MiniGameFishing::check_isFishCaught()
 {
 	//Lure Fishing, whether the lottery results in catching a fish
 	std::random_device rd;
@@ -520,7 +504,7 @@ bool RodSystem::check_isFishCaught()
 	}
 }
 
-void RodSystem::fishingOver()
+void MiniGameFishing::fishingOver()
 {
 	//if fishing ends
 	if (app->scene->GetPlayer()->playermove == false && lureFinishLine == false) {
@@ -537,7 +521,7 @@ void RodSystem::fishingOver()
 	castingline(fishingtype);
 }
 
-void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
+void MiniGameFishing::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	switch (physB->ctype)
 	{
@@ -546,7 +530,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::LAGO:
 	
 		if (fishing.startFishing == false) {
-			app->dialogManager->CreateDialogSinEntity("Estas pescando.", "Fishing System");
+			app->dialogManager->CreateDialogSinEntity("Estas pescando.", "Fishing System",nullptr);
 		}//end_if, if the float collides with the " LAGO"collider, display the fishing dialog
 		fishing.startFishing = true;
 		dialogoPlayerMoving = true;
@@ -567,7 +551,7 @@ void RodSystem::OnCollision(PhysBody* physA, PhysBody* physB) {
 	}
 }
 
-bool RodSystem::miniGameStart(float dt)
+bool MiniGameFishing::miniGameStart(float dt)
 {
 
 	if (fishing.playerGetRod && !fishing.isFishing) {
@@ -578,7 +562,7 @@ bool RodSystem::miniGameStart(float dt)
 	return true;
 }
 
-bool RodSystem::miniGameLoop(float dt)
+bool MiniGameFishing::miniGameLoop(float dt)
 {
 	//Change Rod
 	if (!fishing.isFishing && fishing.rodReady) {
@@ -650,7 +634,7 @@ bool RodSystem::miniGameLoop(float dt)
 	return true;
 }
 
-bool RodSystem::miniGameEnd(float dt)
+bool MiniGameFishing::miniGameEnd(float dt)
 {
 
 	//if player mover, end fishing
@@ -670,6 +654,26 @@ bool RodSystem::miniGameEnd(float dt)
 	}//end_if, close last dialogo
 	
 	return true;
+}
+
+void MiniGameFishing::reward_pool(Fishlevel fishingType)
+{
+	switch (fishingType)
+	{
+	case Fishlevel::NOTHING: fishName = "NOTHING"; break;
+	case Fishlevel::TRASH: fishName = "TRASH"; break;
+	case Fishlevel::SMALL:  fishName = "SMALL"; break;
+	case Fishlevel::MEDIUM:  fishName = "MEDIUM"; break;
+	case Fishlevel::BIG:fishName = "BIG"; break;
+	case Fishlevel::UNKNOWN:LOG("Collision UNKNOWN"); break;
+	}//Reaction upon knowing what is obtained
+
+
+	std::string strNumber = std::to_string(player_click_count);
+	dialogoClose(0);
+	app->dialogManager->CreateDialogSinEntity("you click " + strNumber + " veces " + " tu obtenido " + fishName, "Fishing System", nullptr);
+	fishingOver();
+	resetProbability();
 }
 
 

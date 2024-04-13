@@ -26,6 +26,7 @@ bool DialogManager::Awake(pugi::xml_node config)
 	bool ret = true;
 
 	background_tex_path = config.child("textures").child("background_dialog").attribute("texturepath").as_string();
+	background_tex_path1 = config.child("textures").child("background_dialog2").attribute("texturepath").as_string();
 
 
 	return ret;
@@ -103,11 +104,15 @@ Dialog* DialogManager::CreateDialog(pugi::xml_node itemNode, std::string name, c
 	return dialog;
 }
 
-void DialogManager::CreateDialogSinEntity(std::string Texto, std::string nombre)
+void DialogManager::CreateDialogSinEntity(std::string Texto, std::string nombre, const char* texture)
 {
 	Dialog* dialogoPesca = new Dialog(Texto);
 	dialogoPesca->name = nombre;
 	dialogoPesca->font = app->render->primary_font;
+	if (texture != nullptr) {
+		dialogoPesca->face_tex = app->tex->Load(texture);
+	}
+	//dialogoPesca->face_tex = ;
 	app->dialogManager->AddDialog(dialogoPesca);
 }
 
@@ -115,7 +120,7 @@ void DialogManager::AutoNextDiagolo(int autoNextTime)
 {
 	isPlaying = (dialogues.Count() > 0);
 	autoNextTime_show = autoNextTime_TimerDown.CountDown(autoNextTime);
-	
+
 	if (isPlaying) {
 		if ((int)autoNextTime_show == 0) {
 			if (app->scene->GetRod()->fishingEndCloseDialogo == true) {

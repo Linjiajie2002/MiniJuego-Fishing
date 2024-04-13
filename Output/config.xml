@@ -44,22 +44,43 @@
 			<repeat_sentences>
 				<sentence text="La vida es como pescar, la espera es una creencia, la cosecha es una satisfacción. ¡Ve a pescar, hijo!"/>
 			</repeat_sentences>
-
-
-
 		</dialogTrigger>
 
 
 
-		<rodsystem>
+		<minigamefishing>
 			<fishingfloat texturepath="Assets/Textures/fishingfloat.png" />
-		</rodsystem>
+			<fishlevel>
+				<nonthings>
+					<nonthing texturepath="Assets/Textures/Fishing/trash1.png" name = "nonthing" />
+				</nonthings>
+				<trashes>
+					<trash texturepath="Assets/Textures/Fishing/trash1.png" name = "trash1" />
+					<trash texturepath="Assets/Textures/Fishing/trash2.png" name = "trash2" />
+					<trash texturepath="Assets/Textures/Fishing/trash3.png" name = "trash3" />
+					<trash texturepath="Assets/Textures/Fishing/trash4.png" name = "trash4" />
+				</trashes>
+				<smalls>
+					<small texturepath="Assets/Textures/Fishing/small1.png" name = "small1" />
+					<small texturepath="Assets/Textures/Fishing/small2.png" name = "small2" />
+					<small texturepath="Assets/Textures/Fishing/small3.png" name = "small3" />
+				</smalls>
+				<mediums>
+					<medium texturepath="Assets/Textures/Fishing/medium1.png" name = "medium1" />
+					<medium texturepath="Assets/Textures/Fishing/medium2.png" name = "medium2" />
+				</mediums>
+				<bigs>
+					<big texturepath="Assets/Textures/Fishing/big.png" name = "Bigfishing" />
+				</bigs>
+			</fishlevel>
+		</minigamefishing>
 
 	</scene>
 
 	<dialogmanager>
 		<textures>
 			<background_dialog texturepath="Assets/Textures/background_textbox.png"/>
+			<background_dialog2 texturepath="Assets/Textures/player2_face.png"/>
 		</textures>
 	</dialogmanager>
 

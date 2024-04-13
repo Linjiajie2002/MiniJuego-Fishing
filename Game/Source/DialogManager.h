@@ -32,7 +32,7 @@ public:
 	//Funcion para crear dialogos
 	Dialog* CreateDialog(pugi::xml_node itemNode, std::string name = "", const char* faceTexturePath = "", const char* font = "primary");
 
-	void CreateDialogSinEntity(std::string Texto, std::string nombre);
+	void CreateDialogSinEntity(std::string Texto, std::string nombre, const char* texture);
 	void AutoNextDiagolo(int autoNextTime);
 
 	//Funcion para añadir a la lista de dialogos
@@ -86,6 +86,7 @@ private:
 
 	SDL_Texture* background_tex;
 	std::string background_tex_path;
+	const char* background_tex_path1;
 	int indexText;
 	Timer charTimer;
 	int optionSelected = 0;
