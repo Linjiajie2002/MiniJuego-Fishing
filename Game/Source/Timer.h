@@ -13,7 +13,7 @@ public:
 	void Start();
 	uint32 ReadSec() const;
 	float ReadMSec() const;
-
+	//New//
 	uint32 CountDown(int total) const;
 
 private:

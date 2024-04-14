@@ -56,6 +56,9 @@ bool MiniGameFishing::Awake() {
 
 	fishingfloat_path = parameters.child("fishingfloat").attribute("texturepath").as_string();
 
+
+	printf("\nss: %s", fishingfloat_path);
+
 	return true;
 }
 

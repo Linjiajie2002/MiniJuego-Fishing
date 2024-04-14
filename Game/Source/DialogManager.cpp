@@ -104,6 +104,7 @@ Dialog* DialogManager::CreateDialog(pugi::xml_node itemNode, std::string name, c
 	return dialog;
 }
 
+//New//
 void DialogManager::CreateDialogSinEntity(std::string Texto, std::string nombre, const char* texture)
 {
 	Dialog* dialogoPesca = new Dialog(Texto);
@@ -116,6 +117,7 @@ void DialogManager::CreateDialogSinEntity(std::string Texto, std::string nombre,
 	app->dialogManager->AddDialog(dialogoPesca);
 }
 
+//New//
 void DialogManager::AutoNextDiagolo(int autoNextTime)
 {
 	isPlaying = (dialogues.Count() > 0);

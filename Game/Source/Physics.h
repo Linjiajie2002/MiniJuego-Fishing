@@ -34,6 +34,7 @@ enum class ColliderType {
 	// ..
 };
 
+//New//
 enum class Direction {
 	LEFT,
 	RIGHT,

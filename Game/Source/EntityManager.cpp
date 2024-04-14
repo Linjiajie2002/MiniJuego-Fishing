@@ -5,6 +5,7 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "DialogTriggerEntity.h"
+//New//
 #include "MiniGameFishing.h"
 
 #include "Defs.h"
@@ -94,6 +95,7 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::DIALOG_TRIGGER:
 		entity = new DialogTrigger();
 		break;
+		//New//
 	case EntityType::ROD:
 		entity = new MiniGameFishing();
 		break;

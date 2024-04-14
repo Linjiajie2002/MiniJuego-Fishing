@@ -32,6 +32,7 @@ public:
 	//Funcion para crear dialogos
 	Dialog* CreateDialog(pugi::xml_node itemNode, std::string name = "", const char* faceTexturePath = "", const char* font = "primary");
 
+	//New//
 	void CreateDialogSinEntity(std::string Texto, std::string nombre, const char* texture);
 	void AutoNextDiagolo(int autoNextTime);
 
@@ -53,6 +54,7 @@ public:
 
 	bool isPlaying;
 
+	//New//
 	uint32 autoNextTime_show;
 	Timer autoNextTime_TimerDown;
 

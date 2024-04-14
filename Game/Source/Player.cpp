@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+//New//
 #include "Fishing.h"
 
 
@@ -76,6 +77,7 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		velocity.y += -0.2 * dt;
 		currentAnimation = &walk_U;
+		//New//
 		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; app->scene->GetRod()->fishing.startFishing = false;}
 		else { playermove = false; }
 		player_Direction = Direction::UP;
@@ -84,6 +86,7 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		velocity.y += 0.2 * dt;
 		currentAnimation = &walk_D;
+		//New//
 		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; app->scene->GetRod()->fishing.startFishing = false; }
 		else { playermove = false; }
 		player_Direction = Direction::DOWN;
@@ -91,6 +94,7 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		currentAnimation = &walk_L;
+		//New//
 		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; app->scene->GetRod()->fishing.startFishing = false; }
 		else { playermove = false; }
 		player_Direction = Direction::LEFT;
@@ -99,6 +103,7 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
 		currentAnimation = &walk_R;
+		//New//
 		if (app->scene->GetRod()->fishing.isFishing) { playermove = true; app->scene->GetRod()->fishing.startFishing = false; }
 		else { playermove = false; }
 		player_Direction = Direction::RIGHT;

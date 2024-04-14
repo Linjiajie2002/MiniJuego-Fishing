@@ -9,6 +9,7 @@
 #include "Render.h"
 #include "Animation.h"
 #include "DialogTriggerEntity.h"
+//New//
 #include "Fishing.h"
 struct SDL_Texture;
 
@@ -57,7 +58,7 @@ public:
 	Animation SPosition;
 	SDL_Rect* spritePositions;
 
-	Direction player_Direction;
+
 	Animation* currentAnimation = nullptr;
 	SDL_Rect rect;
 	int TSprite;
@@ -68,7 +69,9 @@ public:
 	SDL_Texture* texture = NULL;
 
 	//Fishing
+	//New//
 	bool playermove = false;
+	Direction player_Direction;
 
 	bool contactDialogTrigger = false;
 	DialogTrigger* dialogTriggerContact = nullptr;

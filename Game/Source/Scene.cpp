@@ -55,6 +55,7 @@ bool Scene::Awake(pugi::xml_node config)
 		dialogTrigger->parameters = itemNode;
 	}
 
+	//New//
 	for (pugi::xml_node itemNode = config.child("minigamefishing"); itemNode; itemNode = itemNode.next_sibling("minigamefishing"))
 	{
 		fishing = (MiniGameFishing*)app->entityManager->CreateEntity(EntityType::ROD);
@@ -159,10 +160,13 @@ Player* Scene::GetPlayer() {
 	return player;
 }
 
+
+//New//
 MiniGameFishing* Scene::GetRod()
 {
 	return fishing;
 }
+
 
 DialogTrigger* Scene::GetDialogTrigger()
 {
