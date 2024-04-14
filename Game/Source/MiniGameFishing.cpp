@@ -57,7 +57,8 @@ bool MiniGameFishing::Awake() {
 	fishingfloat_path = parameters.child("fishingfloat").attribute("texturepath").as_string();
 
 
-	printf("\nss: %s", fishingfloat_path);
+	printf("\nAqui%s", parameters.path());
+
 
 	return true;
 }
@@ -142,6 +143,9 @@ void MiniGameFishing::ani_castingline(Direction direction)
 	float timeLerp = 0.1f;
 	fishingflota_position_x = fishingflota_position_x * (1 - timeLerp) + fishingflota_CenterX * timeLerp;
 	fishingflota_position_y = fishingflota_position_y * (1 - timeLerp) + fishingflota_CenterY * timeLerp;
+
+	printf("\nfishingflota_CenterX: %f", fishingflota_CenterX);
+
 
 	//moving collision
 
