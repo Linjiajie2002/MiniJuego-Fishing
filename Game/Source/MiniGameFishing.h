@@ -36,12 +36,14 @@ public:
 
 public:
 
+	//Base
 	bool miniGameStart(float dt);
 	bool miniGameLoop(float dt);
 	bool miniGameEnd(float dt);
+	//Base(Opcional)
 	void reward_pool(Fishlevel fishingType);
 
-
+	//Sitema de pesca
 	void castingline(FISHINGTYPE type);
 	void ani_castingline(Direction direction);
 	void playNormalFishing();
