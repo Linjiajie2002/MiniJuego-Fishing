@@ -113,7 +113,7 @@ void DialogManager::CreateDialogSinEntity(std::string Texto, std::string nombre,
 	if (texture != nullptr) {
 		dialogoPesca->face_tex = app->tex->Load(texture);
 	}
-	//dialogoPesca->face_tex = ;
+
 	app->dialogManager->AddDialog(dialogoPesca);
 }
 
